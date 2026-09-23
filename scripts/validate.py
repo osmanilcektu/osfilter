@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-"""OSFilter kaynaklarının biçimini, tekrarlarını ve kategori çakışmalarını doğrular."""
+"""OSFilter kaynaklarının biçimini, tekrarlarını, kanıtlarını ve kategori çakışmalarını doğrular."""
 
 from __future__ import annotations
 
+import csv
 from collections import defaultdict
 
-from build import ROOT, SOURCES, load_domain_file
+from build import ROOT, SOURCES, load_domain_file, normalize_domain
+
+CATEGORY_KEYS = {
+    "Reklam": "ads",
+    "İzleyici": "trackers",
+    "Güvenlik": "security",
+    "Bahis/Kumar": "gambling",
+}
 
 
 def duplicates(items: list[str]) -> set[str]:
@@ -16,6 +24,30 @@ def duplicates(items: list[str]) -> set[str]:
             dupes.add(item)
         seen.add(item)
     return dupes
+
+
+def load_evidence() -> dict[str, dict[str, str]]:
+    path = ROOT / "sources" / "evidence.csv"
+    rows: dict[str, dict[str, str]] = {}
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        required = {"domain", "category", "confidence", "evidence_url", "note"}
+        if set(reader.fieldnames or []) != required:
+            raise ValueError(
+                f"evidence.csv başlıkları tam olarak şu olmalı: {', '.join(sorted(required))}"
+            )
+        for number, row in enumerate(reader, 2):
+            domain = normalize_domain(row["domain"])
+            if domain in rows:
+                raise ValueError(f"evidence.csv:{number}: duplicate evidence: {domain}")
+            if row["category"] not in set(CATEGORY_KEYS.values()):
+                raise ValueError(f"evidence.csv:{number}: geçersiz kategori: {row['category']}")
+            if row["confidence"] not in {"high", "medium"}:
+                raise ValueError(f"evidence.csv:{number}: confidence high veya medium olmalı")
+            if not row["evidence_url"].startswith("https://"):
+                raise ValueError(f"evidence.csv:{number}: HTTPS kanıt URL'si gerekli")
+            rows[domain] = row
+    return rows
 
 
 def main() -> None:
@@ -39,6 +71,27 @@ def main() -> None:
                 f"kategori çakışması: {domain} -> {', '.join(sorted(categories))}"
             )
 
+    try:
+        evidence = load_evidence()
+    except ValueError as exc:
+        errors.append(str(exc))
+        evidence = {}
+
+    for domain, categories in sorted(owners.items()):
+        row = evidence.get(domain)
+        if not row:
+            errors.append(f"kanıt eksik: {domain}")
+            continue
+        expected = CATEGORY_KEYS[categories[0]]
+        if row["category"] != expected:
+            errors.append(
+                f"kanıt kategori uyuşmazlığı: {domain}: {row['category']} != {expected}"
+            )
+
+    orphan_evidence = sorted(set(evidence) - set(owners))
+    for domain in orphan_evidence:
+        errors.append(f"kaynaksız kanıt kaydı: {domain}")
+
     if errors:
         print("OSFilter doğrulaması başarısız:")
         for error in errors:
@@ -50,9 +103,11 @@ def main() -> None:
     if stale_allow:
         print(f"Uyarı: {len(stale_allow)} allowlist girdisi şu an hiçbir kaynağı bastırmıyor.")
 
+    high = sum(1 for row in evidence.values() if row["confidence"] == "high")
     print(
         f"OSFilter doğrulaması başarılı: "
-        f"{len(blocked)} benzersiz kaynak domain, {len(set(allow))} allowlist girdisi"
+        f"{len(blocked)} benzersiz domain, {high} yüksek güven, "
+        f"{len(set(allow))} allowlist girdisi"
     )
 
 
