@@ -52,8 +52,8 @@ jobs:
           rm -rf "$DIST"
           mkdir -p "$DIST/lists" "$DIST/LICENSES"
 
-          cp osfilter.txt hosts.txt domains.txt stats.json SHA256SUMS "$DIST/"
-          cp lists/*.txt "$DIST/lists/"
+          cp osfilter.txt hosts.txt domains.txt dnsmasq.conf unbound.conf rpz.zone stats.json SHA256SUMS "$DIST/"
+          cp lists/* "$DIST/lists/"
           cp LICENSE "$DIST/"
           cp THIRD_PARTY_NOTICES.md "$DIST/"
           cp LICENSES/GPL-3.0-only.txt "$DIST/LICENSES/"
@@ -72,6 +72,9 @@ jobs:
           - osfilter.txt — Adblock
           - hosts.txt — hosts
           - domains.txt — plain domains
+          - dnsmasq.conf — dnsmasq 2.86+
+          - unbound.conf — Unbound local-zone
+          - rpz.zone — BIND RPZ
 
           Additional tiers are under lists/:
           - Core TR
