@@ -1,2 +1,9 @@
 # OSFilter izleyici/telemetri kaynakları
 # Biçim: satır başına yalnızca bir alan adı.
+# İşlevsel API/CDN alan adları yanlış pozitifi azaltmak için eklenmez.
+
+affiliateserver.hangikredi.com
+cm.g.doubleclick.net
+pixel.rubiconproject.com
+sync.outbrain.com
+sync.taboola.com
