@@ -1,3 +1,19 @@
 # OSFilter reklam kaynakları
 # Biçim: satır başına yalnızca bir alan adı.
-# Örnek kayıtlar bilinçli olarak eklenmez; yalnız doğrulanmış gerçek alan adları eklenmelidir.
+# Yalnız yüksek güvenilirlikli ve kanıt kaydı bulunan alan adları eklenir.
+
+adserver.adklik.com.tr
+adserver.reklamstore.com
+adserver1.adtech.com.tr
+adsim.sabah.com.tr
+adsp.ciner.com.tr
+adsp.haberturk.com
+adservice.google.com.tr
+advertising.bulurum.com
+afs.googlesyndication.com
+cdn2.admatic.com.tr
+googletagservices.com
+jsc.mgid.com
+pagead2.googlesyndication.com
+securepubads.g.doubleclick.net
+trc.taboola.com
