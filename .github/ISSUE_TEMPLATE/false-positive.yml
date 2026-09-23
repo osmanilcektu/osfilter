@@ -1,7 +1,6 @@
 name: Yanlış engelleme
 description: OSFilter nedeniyle bozulan veya yanlış engellenen bir alan adını bildirin.
 title: "[False Positive] "
-labels: ["false-positive"]
 body:
   - type: input
     id: domain
