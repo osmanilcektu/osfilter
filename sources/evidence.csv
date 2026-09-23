@@ -1,0 +1,21 @@
+domain,category,confidence,evidence_url,note
+adserver.adklik.com.tr,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Turkish ad-host list observation; retained as exact adserver host.
+adserver.reklamstore.com,ads,high,https://www.reklamstore.com/adstxt/,ReklamStore is an Istanbul ad-tech platform; exact adserver hostname is independently observed in Turkish host lists.
+adserver1.adtech.com.tr,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Exact Turkish adserver host observed in established regional host data.
+adsim.sabah.com.tr,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,First-party publisher advertising hostname; exact host only.
+adsp.ciner.com.tr,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,First-party advertising hostname; exact host only.
+adsp.haberturk.com,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,First-party advertising hostname; exact host only.
+adservice.google.com.tr,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Google advertising service hostname observed in regional block data.
+advertising.bulurum.com,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Explicit advertising hostname; exact host only.
+afs.googlesyndication.com,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Google syndicated advertising hostname.
+cdn2.admatic.com.tr,ads,high,https://xenforo.gen.tr/konular/admatic-pageskin-reklam-nasil-eklenir.4594/,Published Admatic integration code loads advertising script from this hostname.
+googletagservices.com,ads,high,https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https,Google documents this host as a Publisher Tag advertising script source.
+jsc.mgid.com,ads,high,https://openadlibrary.com/tr/blog/how-to-identify-the-ad-network-behind-an-ad/,Identified as the MGID native-ad loader fingerprint.
+pagead2.googlesyndication.com,ads,high,https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https,Google documents this host for AdSense ad-tag scripts.
+securepubads.g.doubleclick.net,ads,high,https://developers.google.com/publisher-tag/guides/get-started,Google documents this host as the official GPT ad-serving library.
+trc.taboola.com,ads,high,https://openadlibrary.com/tr/blog/how-to-identify-the-ad-network-behind-an-ad/,Identified as a Taboola native-ad network fingerprint.
+affiliateserver.hangikredi.com,trackers,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Affiliate attribution hostname observed in regional host data.
+cm.g.doubleclick.net,trackers,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Advertising identity/cookie matching hostname observed in regional host data.
+pixel.rubiconproject.com,trackers,high,https://www.jmldirect.com/help/cookie-policy,Publisher cookie disclosure identifies this host as Rubicon targeting/advertising.
+sync.outbrain.com,trackers,high,https://www.netify.ai/resources/hostnames/sync.outbrain.com,Network intelligence identifies this exact host with Outbrain advertising infrastructure.
+sync.taboola.com,trackers,high,https://www.netify.ai/resources/hostnames/sync.taboola.com,Network intelligence identifies this exact host with Taboola advertising infrastructure.
