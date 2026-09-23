@@ -1,36 +1,36 @@
 # NextDNS entegrasyon hedefi
 
-OSFilter'ın hedeflerinden biri NextDNS gibi merkezi DNS servislerinde seçilebilir bir bölgesel liste haline gelmektir.
+OSFilter'ın NextDNS için aday listesi **Core TR** katmanıdır.
 
-## Teknik uyumluluk
+## Neden global Standard/Pro/Ultra değil?
 
-NextDNS'in açık blocklist deposundaki tanımlar JSON metadata dosyalarıyla bir kaynak URL'yi işaret eder. OSFilter için hazır aday tanım:
+Global tier'lar HaGeZi ve diğer açık upstream'lerden oluşturulan kullanışlı son kullanıcı paketleridir. NextDNS kataloğu açısından OSFilter'ın benzersiz katkısı ise Türkiye'ye özgü, bağımsız olarak doğrulanan Core TR verisidir. Bu yüzden başvuruda başka bir büyük global blocklist'i yeniden paketlemek yerine bölgesel veri sunulur.
+
+## Teknik kaynak
+
+Metadata:
 
 `integrations/nextdns/osfilter.json`
 
-Kaynak:
+Kararlı hosts kaynağı:
 
-`https://raw.githubusercontent.com/osmanilcektu/osfilter/main/hosts.txt`
+`https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-core-hosts.txt`
 
 Format:
 
 `hosts`
 
-## Kabul öncesi kalite hedefleri
+## Kabul öncesi hedefler
 
-NextDNS'e entegrasyon talebi açılmadan önce OSFilter şu seviyeyi hedefler:
+- düzenli bakım geçmişi;
+- CI/build'lerin sürekli başarılı olması;
+- Core TR'de her domain için evidence/provenance;
+- hızlı false-positive düzeltme;
+- Türkiye'ye özgü anlamlı ve büyüyen kapsama;
+- kullanıcı/katkıcı geri bildirimi;
+- kararlı RAW URL;
+- yayınlanan sürümlerde geriye dönük format uyumu.
 
-- düzenli ve gözle görülür bakım geçmişi;
-- otomatik doğrulama ve testlerin sürekli yeşil olması;
-- her kaynak domain için kanıt/provenance kaydı;
-- hızlı false-positive düzeltme süreci;
-- ölü/terk edilmiş domainlerin periyodik denetimi;
-- Türkiye'ye özgü, diğer büyük listelere anlamlı ek kapsam;
-- kullanıcı ve katkıcı topluluğu;
-- sabit RAW URL ve geriye dönük uyumlu çıktı formatı.
+## Başvuru zamanı
 
-## Not
-
-NextDNS son kullanıcı arayüzünde keyfi özel blocklist URL'si ekleme özelliği sunmadığından, gerçek entegrasyon NextDNS'in kendi blocklist kataloğuna kabul edilmesini gerektirir.
-
-OSFilter yeterli olgunluğa ulaşmadan upstream PR açılmamalıdır. Önce kalite, bakım geçmişi ve benzersiz Türkiye kapsamı kanıtlanacaktır.
+100 bin domain sahibi olmak NextDNS kabulü için tek başına değer değildir. Global 100K+ tier'lar son kullanıcı için faydalıdır; NextDNS adaylığında ölçülecek asıl fark Core TR'nin özgünlüğü, bakım kalitesi ve false-positive performansıdır.
