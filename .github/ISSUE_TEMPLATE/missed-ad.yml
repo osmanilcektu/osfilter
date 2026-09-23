@@ -1,7 +1,6 @@
 name: Kaçan reklam / izleyici
 description: OSFilter'ın engellemediği Türkiye odaklı reklam veya izleyiciyi bildirin.
 title: "[Missed] "
-labels: ["missed-filter"]
 body:
   - type: input
     id: site
