@@ -6,6 +6,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from build import (  # noqa: E402
+    assert_tier_nesting,
+    deterministic_serial,
     normalize_domain,
     parse_external_line,
     render_dnsmasq,
@@ -29,6 +31,10 @@ class NormalizeDomainTests(unittest.TestCase):
     def test_single_label_is_rejected(self):
         with self.assertRaises(ValueError):
             normalize_domain("localhost")
+
+    def test_ip_is_rejected(self):
+        with self.assertRaises(ValueError):
+            normalize_domain("127.0.0.1")
 
 
 class ExternalParserTests(unittest.TestCase):
@@ -74,6 +80,40 @@ class ResolverFormatTests(unittest.TestCase):
         )
         self.assertIn("ads.example.com CNAME .", text)
         self.assertIn("*.ads.example.com CNAME .", text)
+
+    def test_rpz_is_deterministic(self):
+        first = render_rpz(
+            "test", ["ads.example.com", "tracker.example.com"],
+            license_id="GPL-3.0-only",
+        )
+        second = render_rpz(
+            "test", ["ads.example.com", "tracker.example.com"],
+            license_id="GPL-3.0-only",
+        )
+        self.assertEqual(first, second)
+        self.assertEqual(
+            deterministic_serial(["ads.example.com"]),
+            deterministic_serial(["ads.example.com"]),
+        )
+
+
+class TierTests(unittest.TestCase):
+    def test_valid_nested_tiers(self):
+        assert_tier_nesting(
+            ["a.example.com"],
+            ["a.example.com", "b.example.com"],
+            ["a.example.com", "b.example.com", "c.example.com"],
+            ["a.example.com", "b.example.com", "c.example.com", "d.example.com"],
+        )
+
+    def test_invalid_nested_tiers_raise(self):
+        with self.assertRaises(RuntimeError):
+            assert_tier_nesting(
+                ["a.example.com"],
+                ["b.example.com"],
+                ["b.example.com"],
+                ["b.example.com"],
+            )
 
 
 class TurkeyCandidateTests(unittest.TestCase):
