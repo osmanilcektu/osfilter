@@ -84,7 +84,7 @@
       "name": "Turk-AdFilter",
       "homepage": "https://github.com/omerdduran/turk-adfilter",
       "license": "GPL-3.0",
-      "reason": "Its regional Lite output also contains many non-DNS rules; DNS-safe extraction and provenance audit are needed before import."
+      "reason": "The main regional ads list includes cosmetic and non-DNS rules and needs a separate audited extractor. Only exact domain rules from its dedicated Bahis category are imported into optional gambling outputs."
     },
     "adguard_filters": {
       "name": "AdGuard Filters / Mobile Ads Filter",
@@ -115,6 +115,39 @@
       "homepage": "https://github.com/StevenBlack/hosts",
       "license": "Mixed upstream licenses",
       "reason": "Excellent architecture reference, but the aggregate includes multiple upstream licenses; OSFilter avoids importing the aggregate as a single relicensed source."
+    }
+  },
+  "category_feeds": {
+    "hagezi_gambling_medium": {
+      "name": "HaGeZi Gambling Medium",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling.medium-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "min_entries": 100000,
+      "max_entries": 400000,
+      "category": "gambling",
+      "format": "domains"
+    },
+    "hagezi_tif_mini": {
+      "name": "HaGeZi Threat Intelligence Feeds Mini",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.mini-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "min_entries": 80000,
+      "max_entries": 400000,
+      "category": "security",
+      "format": "domains"
+    },
+    "turk_adfilter_bahis": {
+      "name": "Turk-AdFilter Bahis/Kumar Kalkanı",
+      "url": "https://raw.githubusercontent.com/omerdduran/turk-adfilter/main/turk-adfilter-bahis.txt",
+      "homepage": "https://github.com/omerdduran/turk-adfilter",
+      "license": "GPL-3.0-only",
+      "min_entries": 40,
+      "max_entries": 3000,
+      "category": "gambling_tr",
+      "region": "tr",
+      "format": "abp_dns"
     }
   }
 }

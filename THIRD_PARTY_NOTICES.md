@@ -4,7 +4,7 @@ OSFilter contains an independently maintained Türkiye-focused Core TR dataset a
 
 ## HaGeZi DNS Blocklists
 
-OSFilter Lite, Standard, Pro and Ultra use HaGeZi DNS Blocklists as global baseline components.
+OSFilter Lite, Standard, Pro and Ultra use HaGeZi DNS Blocklists as global baseline components. The separately subscribed Security and Gambling categories use the Threat Intelligence Feeds Mini and Gambling Medium domain-only outputs.
 
 - Project: https://github.com/hagezi/dns-blocklists
 - License: GNU General Public License v3.0 only (GPL-3.0-only)
@@ -35,6 +35,17 @@ OSFilter Pro, Ultra and TR Regional use the plain DNS output of Turkish Ad Hosts
 
 Turkish Ad Hosts is independent and does not endorse OSFilter. Its data is upstream-derived in the aggregate outputs, not part of OSFilter's independently curated Core TR.
 
+## Turk-AdFilter Bahis
+
+OSFilter's optional Gambling and Gambling TR categories use exact domain-blocking rules from Turk-AdFilter Bahis by omerdduran.
+
+- Project: https://github.com/omerdduran/turk-adfilter
+- License: GNU General Public License v3.0 (GPL-3.0)
+- Input: `turk-adfilter-bahis.txt` (only `||domain^` rules, excluding exceptions, paths and cosmetic filters)
+- OSFilter modifications: DNS-only extraction, normalization, deduplication, protected-service filtering and format generation
+
+Turk-AdFilter is independent and does not endorse OSFilter. Imported entries are not part of OSFilter Core TR.
+
 ## Research-only projects
 
 Reviewed for architecture, coverage or validation, but not wholesale-imported into the current default build:
@@ -45,7 +56,7 @@ Reviewed for architecture, coverage or validation, but not wholesale-imported in
 - AdAway default hosts — CC BY 3.0
 - StevenBlack unified hosts — mixed upstream licenses
 - bkrucarci turk-adlist — CC BY-SA 3.0; not combined into GPL aggregate outputs
-- Turk-AdFilter — GPL-3.0; Lite includes non-DNS rules and needs a separate extractor audit
+- Turk-AdFilter's main ads list — GPL-3.0; Lite includes non-DNS rules and needs a separate extractor audit; only the dedicated Bahis category's exact-domain rules are imported
 
 See `sources/upstreams.json` for the machine-readable source policy.
 

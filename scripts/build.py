@@ -28,6 +28,7 @@ SOURCES = {
 
 LABEL_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
 ABP_DOMAIN_RE = re.compile(r"^\|\|([a-zA-Z0-9._-]+)\^")
+ABP_EXACT_DNS_RE = re.compile(r"^\|\|([a-zA-Z0-9._-]+)\^$")
 RPZ_SERIAL_RE = re.compile(r"(?m)^@ IN SOA \S+ \S+ \((\d+)\s")
 PROTECTED_TURKISH_ZONES = {
     "com.tr", "net.tr", "org.tr", "gov.tr", "edu.tr", "bel.tr",
@@ -144,6 +145,17 @@ def parse_plain_domain_line(raw: str) -> str | None:
         return None
 
 
+def parse_abp_dns_line(raw: str) -> str | None:
+    """Only exact hostname rules; ignore exceptions, paths, wildcards and cosmetics."""
+    match = ABP_EXACT_DNS_RE.fullmatch(raw.strip())
+    if not match:
+        return None
+    try:
+        return normalize_domain(match.group(1))
+    except ValueError:
+        return None
+
+
 def _looks_like_html(raw: bytes) -> bool:
     sample = raw[:4096].lstrip().lower()
     return (
@@ -190,7 +202,10 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
         if line.strip() and not line.lstrip().startswith(("#", "!"))
     )
 
-    parser = parse_plain_domain_line if spec.get("format") == "domains" else parse_external_line
+    parser = {
+        "domains": parse_plain_domain_line,
+        "abp_dns": parse_abp_dns_line,
+    }[spec["format"]]
     domains = unique_sorted(
         domain
         for domain in (parser(line) for line in raw_lines)
@@ -205,7 +220,8 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
             f"(beklenen {minimum}..{maximum})"
         )
 
-    if candidate_lines and len(domains) / candidate_lines < 0.75:
+    minimum_ratio = 0.5 if spec["format"] == "abp_dns" else 0.75
+    if candidate_lines and len(domains) / candidate_lines < minimum_ratio:
         raise RuntimeError(
             f"{key}: parse oranı şüpheli "
             f"({len(domains)}/{candidate_lines} geçerli domain)"
@@ -491,6 +507,7 @@ def main() -> None:
     tier_to_domains: dict[str, list[str]] = {}
     upstream_stats: dict[str, dict] = {}
     regional_to_domains: dict[str, list[str]] = {}
+    category_to_domains: dict[str, list[str]] = {}
 
     for key, spec in cfg["active"].items():
         fetched, meta = fetch_upstream(key, spec)
@@ -499,6 +516,13 @@ def main() -> None:
         if spec.get("region") == "tr":
             regional_to_domains.setdefault(spec["tier"], []).extend(filtered)
         upstream_stats[key] = meta
+
+    for key, spec in cfg["category_feeds"].items():
+        fetched, meta = fetch_upstream(key, spec)
+        category_to_domains.setdefault(spec["category"], []).extend(
+            domain for domain in fetched if domain not in protected
+        )
+        upstream_stats[key] = {**meta, "category": spec["category"]}
 
     for tier in list(tier_to_domains):
         tier_to_domains[tier] = unique_sorted(tier_to_domains[tier])
@@ -753,24 +777,34 @@ def main() -> None:
             ),
         )
 
-    write(
-        LISTS_DIR / "osfilter-security.txt",
-        render_adblock(
-            "OSFilter — Security TR",
-            "Locally verified OSFilter security/phishing domains.",
-            unique_sorted(categories["Güvenlik"]),
-            license_id="ODbL-1.0 OR GPL-3.0-only",
-        ),
+    security = unique_sorted(categories["Güvenlik"] + category_to_domains["security"])
+    gambling_tr = unique_sorted(local_gambling + category_to_domains["gambling_tr"])
+    gambling = unique_sorted(gambling_tr + category_to_domains["gambling"])
+    optional_profiles = (
+        ("security", "Security", "Optional malware/phishing/scam domain feed.",
+         security, "HaGeZi Threat Intelligence Feeds Mini + OSFilter Core TR"),
+        ("gambling", "Gambling", "Optional global and Turkish gambling domains.",
+         gambling, "HaGeZi Gambling Medium + Turk-AdFilter Bahis + OSFilter Core TR"),
+        ("gambling-tr", "Gambling TR", "Optional Türkiye-focused gambling domains.",
+         gambling_tr, "Turk-AdFilter Bahis + OSFilter Core TR"),
     )
-    write(
-        LISTS_DIR / "osfilter-gambling.txt",
-        render_adblock(
-            "OSFilter — Gambling TR",
-            "Optional Türkiye-focused gambling category maintained independently by OSFilter.",
-            local_gambling,
-            license_id="ODbL-1.0 OR GPL-3.0-only",
-        ),
-    )
+    for name, title, description, domains, upstream in optional_profiles:
+        basename = LISTS_DIR / f"osfilter-{name}"
+        write(
+            basename.with_suffix(".txt"),
+            render_adblock(f"OSFilter — {title}", description, domains,
+                           license_id="GPL-3.0-only", upstream=upstream),
+        )
+        write(
+            LISTS_DIR / f"osfilter-{name}-hosts.txt",
+            render_hosts(f"OSFilter — {title} hosts", domains,
+                         license_id="GPL-3.0-only", upstream=upstream),
+        )
+        write(
+            LISTS_DIR / f"osfilter-{name}-domains.txt",
+            render_domains(f"OSFilter — {title} domains", domains,
+                           license_id="GPL-3.0-only", upstream=upstream),
+        )
 
     stats = {
         "schema": 3,
@@ -788,6 +822,11 @@ def main() -> None:
             "ultra": len(ultra),
             "tr_regional": len(tr_regional),
             "tr_regional_ultra": len(tr_regional_ultra),
+        },
+        "optional_categories": {
+            "security": len(security),
+            "gambling": len(gambling),
+            "gambling_tr": len(gambling_tr),
         },
         "allowlist": len(allow),
         "allowlist_breakdown": {
