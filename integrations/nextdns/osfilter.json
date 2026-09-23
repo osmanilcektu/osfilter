@@ -1,0 +1,9 @@
+{
+  "name": "OSFilter",
+  "website": "https://github.com/osmanilcektu/osfilter",
+  "description": "Turkey-focused DNS blocklist for advertising and tracking domains with evidence-backed curation and automated validation.",
+  "source": {
+    "url": "https://raw.githubusercontent.com/osmanilcektu/osfilter/main/hosts.txt",
+    "format": "hosts"
+  }
+}
