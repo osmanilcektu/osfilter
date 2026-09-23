@@ -58,4 +58,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add osfilter.txt hosts.txt domains.txt stats.json lists/
           git commit -m "build: refresh OSFilter tiers [skip ci]"
-          git push
+
+          # The repository may have moved while this build was downloading
+          # upstream lists. Rebase the generated commit onto the latest main.
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
