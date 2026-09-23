@@ -5,8 +5,9 @@ from __future__ import annotations
 
 import csv
 from collections import defaultdict
+from urllib.parse import urlparse
 
-from build import ROOT, SOURCES, load_domain_file, normalize_domain
+from build import ROOT, SOURCES, load_domain_file, load_upstreams, normalize_domain
 
 CATEGORY_KEYS = {
     "Reklam": "ads",
@@ -50,8 +51,52 @@ def load_evidence() -> dict[str, dict[str, str]]:
     return rows
 
 
+def validate_upstreams() -> list[str]:
+    errors: list[str] = []
+    required_fields = {
+        "name", "url", "homepage", "license",
+        "min_entries", "max_entries", "tier"
+    }
+    allowed_tiers = {"lite", "standard", "pro", "ultra"}
+    allowed_licenses = {"GPL-3.0-only", "Unlicense"}
+
+    try:
+        cfg = load_upstreams()
+    except (ValueError, OSError) as exc:
+        return [f"upstream config okunamadı: {exc}"]
+
+    seen_tiers: set[str] = set()
+    for key, spec in cfg.get("active", {}).items():
+        missing = required_fields - set(spec)
+        if missing:
+            errors.append(f"{key}: eksik upstream alanları: {', '.join(sorted(missing))}")
+            continue
+
+        if urlparse(spec["url"]).scheme != "https":
+            errors.append(f"{key}: kaynak URL HTTPS olmalı")
+        if urlparse(spec["homepage"]).scheme != "https":
+            errors.append(f"{key}: homepage HTTPS olmalı")
+        if spec["tier"] not in allowed_tiers:
+            errors.append(f"{key}: bilinmeyen tier: {spec['tier']}")
+        else:
+            seen_tiers.add(spec["tier"])
+        if spec["license"] not in allowed_licenses:
+            errors.append(f"{key}: allowlist dışı upstream lisansı: {spec['license']}")
+        if not isinstance(spec["min_entries"], int) or not isinstance(spec["max_entries"], int):
+            errors.append(f"{key}: min/max entry tam sayı olmalı")
+        elif not 0 < spec["min_entries"] < spec["max_entries"]:
+            errors.append(f"{key}: geçersiz min/max entry aralığı")
+
+    missing_tiers = allowed_tiers - seen_tiers
+    if missing_tiers:
+        errors.append(f"upstream tier eksik: {', '.join(sorted(missing_tiers))}")
+
+    return errors
+
+
 def main() -> None:
     errors: list[str] = []
+    errors.extend(validate_upstreams())
     owners: dict[str, list[str]] = defaultdict(list)
 
     for category, path in SOURCES.items():
