@@ -38,7 +38,7 @@ combined into GPL-3.0 aggregate tiers.
 3. GLOBAL AGGREGATE OUTPUTS
 
 The following outputs include or are derived from GPL-3.0-only upstream data
-from HaGeZi DNS Blocklists and are therefore distributed under GPL-3.0-only:
+from HaGeZi DNS Blocklists; Ultra also incorporates public-domain data from the Block List Project. Because the aggregate includes GPL-3.0 material, these outputs are distributed under GPL-3.0-only:
 
 - osfilter.txt
 - hosts.txt
@@ -49,6 +49,9 @@ from HaGeZi DNS Blocklists and are therefore distributed under GPL-3.0-only:
 - lists/osfilter-pro.txt
 - lists/osfilter-pro-hosts.txt
 - lists/osfilter-pro-domains.txt
+- lists/osfilter-ultra.txt
+- lists/osfilter-ultra-hosts.txt
+- lists/osfilter-ultra-domains.txt
 
 See THIRD_PARTY_NOTICES.md and sources/upstreams.json for attribution and
 source policy.
