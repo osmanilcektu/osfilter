@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from build import normalize_domain, parse_external_line  # noqa: E402
+from discover_tr_candidates import is_turkey_domain  # noqa: E402
 
 
 class NormalizeDomainTests(unittest.TestCase):
@@ -46,6 +47,16 @@ class ExternalParserTests(unittest.TestCase):
     def test_comments_and_localhost_are_ignored(self):
         self.assertIsNone(parse_external_line("# comment"))
         self.assertIsNone(parse_external_line("0.0.0.0 localhost"))
+
+
+class TurkeyCandidateTests(unittest.TestCase):
+    def test_tr_domains(self):
+        self.assertTrue(is_turkey_domain("example.tr"))
+        self.assertTrue(is_turkey_domain("ads.example.com.tr"))
+
+    def test_non_tr_domains(self):
+        self.assertFalse(is_turkey_domain("example.com"))
+        self.assertFalse(is_turkey_domain("nottr.example"))
 
 
 if __name__ == "__main__":
