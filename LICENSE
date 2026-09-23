@@ -30,6 +30,9 @@ This applies to OSFilter-authored/local data in:
 - lists/osfilter-core.txt
 - lists/osfilter-core-hosts.txt
 - lists/osfilter-core-domains.txt
+- lists/osfilter-core-dnsmasq.conf
+- lists/osfilter-core-unbound.conf
+- lists/osfilter-core-rpz.zone
 - locally maintained security/gambling outputs
 
 The GPL option exists so the same original OSFilter data can be legally
@@ -43,6 +46,9 @@ from HaGeZi DNS Blocklists; Ultra also incorporates public-domain data from the 
 - osfilter.txt
 - hosts.txt
 - domains.txt
+- dnsmasq.conf
+- unbound.conf
+- rpz.zone
 - lists/osfilter-lite.txt
 - lists/osfilter-lite-hosts.txt
 - lists/osfilter-lite-domains.txt
