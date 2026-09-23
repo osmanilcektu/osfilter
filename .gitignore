@@ -9,3 +9,5 @@ Thumbs.db
 /domains.txt
 /stats.json
 /lists/*.txt
+/SHA256SUMS
+/artifacts/
