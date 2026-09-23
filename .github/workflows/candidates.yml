@@ -1,6 +1,12 @@
 name: Discover TR candidates
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "sources/upstreams.json"
+      - "scripts/discover_tr_candidates.py"
+      - ".github/workflows/candidates.yml"
   schedule:
     - cron: "17 4 * * 0"
   workflow_dispatch:
