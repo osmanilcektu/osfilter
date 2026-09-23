@@ -1,0 +1,25 @@
+# OSFilter functional safety allowlist
+# Exact hostnames that should remain reachable across all OSFilter ad/tracking tiers.
+# This is intentionally narrow: authentication, payments and core service APIs only.
+# Do not add broad parent domains just because a service is popular.
+
+accounts.google.com
+api.github.com
+api.openai.com
+api.paypal.com
+api.stripe.com
+appleid.apple.com
+auth.openai.com
+chatgpt.com
+discord.com
+gateway.discord.gg
+github.com
+graph.instagram.com
+i.instagram.com
+idmsa.apple.com
+login.live.com
+login.microsoftonline.com
+oauth2.googleapis.com
+openai.com
+stripe.com
+web.whatsapp.com
