@@ -5,7 +5,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from build import (  # noqa: E402\n    normalize_domain,\n    parse_external_line,\n    render_dnsmasq,\n    render_rpz,\n    render_unbound,\n)
+from build import (  # noqa: E402
+    normalize_domain,
+    parse_external_line,
+    render_dnsmasq,
+    render_rpz,
+    render_unbound,
+)
 from discover_tr_candidates import is_turkey_domain  # noqa: E402
 
 
