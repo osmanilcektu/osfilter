@@ -1,0 +1,30 @@
+name: Kaçan reklam / izleyici
+description: OSFilter'ın engellemediği Türkiye odaklı reklam veya izleyiciyi bildirin.
+title: "[Missed] "
+labels: ["missed-filter"]
+body:
+  - type: input
+    id: site
+    attributes:
+      label: Görüldüğü site
+      placeholder: example.com
+    validations:
+      required: true
+  - type: input
+    id: domain
+    attributes:
+      label: Şüpheli reklam/izleyici alan adı
+      placeholder: ads.example.com
+  - type: textarea
+    id: details
+    attributes:
+      label: Açıklama
+      description: Reklamın veya izleyicinin nerede görüldüğünü ve mümkünse nasıl doğrulandığını yazın.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Kontrol
+      options:
+        - label: Bildirilen alan adının normal site işlevi için gerekli olmadığını kontrol ettim.
