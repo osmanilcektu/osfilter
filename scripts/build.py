@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import ipaddress
 import json
 import re
@@ -439,6 +440,19 @@ def main() -> None:
         "upstreams": upstream_stats,
     }
     write(ROOT / "stats.json", json.dumps(stats, ensure_ascii=False, indent=2) + "\n")
+
+    checksum_targets = [
+        ROOT / "osfilter.txt",
+        ROOT / "hosts.txt",
+        ROOT / "domains.txt",
+        ROOT / "stats.json",
+        *sorted(LISTS_DIR.glob("*.txt")),
+    ]
+    checksum_lines = []
+    for path in checksum_targets:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        checksum_lines.append(f"{digest}  {path.relative_to(ROOT).as_posix()}")
+    write(ROOT / "SHA256SUMS", "\n".join(checksum_lines) + "\n")
 
     print(
         "OSFilter build complete: "
