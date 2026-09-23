@@ -32,3 +32,9 @@ An upstream that unexpectedly falls outside its configured size range causes the
 Security/phishing data should not be added merely because a domain looks suspicious. Core TR security records require evidence in `sources/evidence.csv`.
 
 OSFilter's global ad/tracking tiers are not a replacement for a dedicated malware/threat-intelligence product.
+
+## Functional safety allowlist
+
+`sources/functional-allowlist.txt` contains a deliberately small set of exact hostnames required for authentication, payments or core application connectivity. These entries are removed from every global OSFilter tier during the build.
+
+This file is not a general “popular sites” whitelist. Broad parent domains should not be added merely to suppress privacy filtering. New entries must represent a concrete functional-breakage risk.
