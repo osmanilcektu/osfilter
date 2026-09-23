@@ -7,6 +7,8 @@ on:
       - "sources/**"
       - "allowlist.txt"
       - "scripts/build.py"
+      - "scripts/regional.py"
+      - "scripts/check_release.py"
       - "scripts/validate.py"
       - "tests/**"
       - ".github/workflows/build.yml"
@@ -48,6 +50,18 @@ jobs:
 
       - name: Show build statistics
         run: cat stats.json
+
+      - name: Guard against sudden upstream changes
+        run: |
+          if git fetch --quiet origin dist:refs/remotes/origin/dist 2>/dev/null; then
+            PREVIOUS="$RUNNER_TEMP/osfilter-previous"
+            mkdir -p "$PREVIOUS/lists"
+            git show origin/dist:domains.txt > "$PREVIOUS/domains.txt"
+            git show origin/dist:lists/osfilter-ultra-domains.txt > "$PREVIOUS/lists/osfilter-ultra-domains.txt"
+            python scripts/check_release.py --previous-dir "$PREVIOUS"
+          else
+            echo "No previous dist branch: first publication."
+          fi
 
       - name: Stage distribution tree
         run: |

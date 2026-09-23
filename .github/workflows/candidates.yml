@@ -6,6 +6,7 @@ on:
     paths:
       - "sources/upstreams.json"
       - "scripts/discover_tr_candidates.py"
+      - "scripts/regional.py"
       - ".github/workflows/candidates.yml"
   schedule:
     - cron: "17 4 * * 0"

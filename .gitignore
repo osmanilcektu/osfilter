@@ -16,3 +16,4 @@ Thumbs.db
 /rpz.zone
 /lists/*.conf
 /lists/*.zone
+/upstream-lock.json

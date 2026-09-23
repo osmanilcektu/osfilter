@@ -15,6 +15,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from build import ROOT, SOURCES, fetch_upstream, load_domain_file, load_upstreams
+from regional import is_turkey_domain
 
 AD_PATTERNS = (
     "ad.", "ads.", "adserver", "adservice", "advert", "reklam",
@@ -37,10 +38,6 @@ FUNCTIONAL_PATTERNS = (
     "api.", "api-", "cdn.", "cdn-", "fileserver", "static.",
     "assets.", "image.", "images.", "geoip.", "config.", "update.",
 )
-
-
-def is_turkey_domain(domain: str) -> bool:
-    return domain.endswith(".tr")
 
 
 def local_domains() -> set[str]:

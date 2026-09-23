@@ -11,6 +11,8 @@ import urllib.request
 from pathlib import Path
 from urllib.parse import urlparse
 
+from regional import regional_profile
+
 ROOT = Path(__file__).resolve().parents[1]
 LISTS_DIR = ROOT / "lists"
 UPSTREAMS_FILE = ROOT / "sources" / "upstreams.json"
@@ -85,6 +87,16 @@ def unique_sorted(items) -> list[str]:
     return sorted(set(items))
 
 
+def protected_block_rules(allowed: set[str]) -> set[str]:
+    """A DNS block rule also blocks descendants: protect allowed hosts' parents."""
+    protected: set[str] = set()
+    for host in allowed:
+        labels = host.split(".")
+        for index in range(len(labels) - 1):
+            protected.add(".".join(labels[index:]))
+    return protected
+
+
 def load_upstreams() -> dict:
     data = json.loads(UPSTREAMS_FILE.read_text(encoding="utf-8"))
     if data.get("schema") != 1:
@@ -140,6 +152,9 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
         final_url = response.geturl()
         raw_bytes = response.read(MAX_SOURCE_BYTES + 1)
 
+    if urlparse(final_url).scheme != "https":
+        raise RuntimeError(f"{key}: redirect sonrası kaynak HTTPS değil: {final_url}")
+
     if len(raw_bytes) > MAX_SOURCE_BYTES:
         raise RuntimeError(
             f"{key}: upstream {MAX_SOURCE_BYTES // (1024 * 1024)} MiB sınırını aştı"
@@ -182,6 +197,7 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
         "final_url": final_url,
         "homepage": spec["homepage"],
         "license": spec["license"],
+        "region": spec.get("region", "global"),
         "entries": len(domains),
         "bytes": len(raw_bytes),
         "sha256": raw_sha256,
@@ -416,11 +432,12 @@ def main() -> None:
     manual_allow = set(load_domain_file(ROOT / "allowlist.txt"))
     functional_allow = set(load_domain_file(ROOT / "sources" / "functional-allowlist.txt"))
     allow = manual_allow | functional_allow
+    protected = protected_block_rules(allow)
 
     categories: dict[str, list[str]] = {}
     for name, path in SOURCES.items():
         categories[name] = unique_sorted(
-            domain for domain in load_domain_file(path) if domain not in allow
+            domain for domain in load_domain_file(path) if domain not in protected
         )
 
     local_ads_trackers = unique_sorted(categories["Reklam"] + categories["İzleyici"])
@@ -432,11 +449,14 @@ def main() -> None:
     cfg = load_upstreams()
     tier_to_domains: dict[str, list[str]] = {}
     upstream_stats: dict[str, dict] = {}
+    regional_to_domains: dict[str, list[str]] = {}
 
     for key, spec in cfg["active"].items():
         fetched, meta = fetch_upstream(key, spec)
-        filtered = [domain for domain in fetched if domain not in allow]
+        filtered = [domain for domain in fetched if domain not in protected]
         tier_to_domains.setdefault(spec["tier"], []).extend(filtered)
+        if spec.get("region") == "tr":
+            regional_to_domains.setdefault(spec["tier"], []).extend(filtered)
         upstream_stats[key] = meta
 
     for tier in list(tier_to_domains):
@@ -449,6 +469,15 @@ def main() -> None:
     standard = unique_sorted(lite + tier_to_domains["standard"] + local_core)
     pro = unique_sorted(standard + tier_to_domains["pro"] + local_core)
     ultra = unique_sorted(pro + tier_to_domains["ultra"] + local_core)
+    tr_default_upstreams = (
+        regional_to_domains.get("lite", []) + regional_to_domains.get("standard", [])
+        + regional_to_domains.get("pro", [])
+    )
+    tr_all_upstreams = tr_default_upstreams + regional_to_domains.get("ultra", [])
+    tr_regional = regional_profile(standard, local_core, tr_default_upstreams)
+    tr_regional_ultra = regional_profile(ultra, local_core, tr_all_upstreams)
+    if not set(tr_regional).issubset(tr_regional_ultra):
+        raise RuntimeError("TR regional katmanları iç içe değil")
 
     minimum_tier_sizes = {
         "lite": 30000,
@@ -471,11 +500,13 @@ def main() -> None:
 
     assert_tier_nesting(lite, standard, pro, ultra)
 
-    def tier_notice(tier_name: str) -> str:
+    def tier_notice(tier_name: str, *, include_regional: bool = False) -> str:
+        included = ("lite", "standard", "pro", "ultra")
+        included = included[:included.index(tier_name) + 1]
         names = [
             upstream_stats[key]["name"]
             for key, spec in cfg["active"].items()
-            if spec["tier"] == tier_name
+            if spec["tier"] in included or (include_regional and spec.get("region") == "tr")
         ]
         return " + ".join(names + ["OSFilter Core TR"])
 
@@ -591,6 +622,35 @@ def main() -> None:
     for path, rendered in core_outputs:
         write(path, rendered)
 
+    for tier_name, domains, description in [
+        (
+            "tr-regional", tr_regional,
+            "Automatically updated .tr advertising/tracking domains from the Standard global tier, plus reviewed Core TR. Sensitive services are excluded.",
+        ),
+        (
+            "tr-regional-ultra", tr_regional_ultra,
+            "Aggressive .tr advertising/tracking domains from the Ultra global tier, plus reviewed Core TR. Higher breakage risk; opt in only.",
+        ),
+    ]:
+        title = "OSFilter — " + tier_name.replace("-", " ").title()
+        upstream = tier_notice("standard" if tier_name == "tr-regional" else "ultra",
+                               include_regional=True)
+        write(
+            LISTS_DIR / f"osfilter-{tier_name}.txt",
+            render_adblock(title, description, domains,
+                           license_id="GPL-3.0-only", upstream=upstream),
+        )
+        write(
+            LISTS_DIR / f"osfilter-{tier_name}-hosts.txt",
+            render_hosts(title, domains,
+                         license_id="GPL-3.0-only", upstream=upstream),
+        )
+        write(
+            LISTS_DIR / f"osfilter-{tier_name}-domains.txt",
+            render_domains(title, domains,
+                           license_id="GPL-3.0-only", upstream=upstream),
+        )
+
     # Global tiers.
     for tier_name, domains, title, description in [
         (
@@ -674,6 +734,8 @@ def main() -> None:
             "standard": len(standard),
             "pro": len(pro),
             "ultra": len(ultra),
+            "tr_regional": len(tr_regional),
+            "tr_regional_ultra": len(tr_regional_ultra),
         },
         "allowlist": len(allow),
         "allowlist_breakdown": {

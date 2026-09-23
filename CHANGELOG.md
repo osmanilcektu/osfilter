@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 — 2026-09-23
+
+### Added
+
+- Daily generated TR Regional and TR Regional Ultra DNS profiles with GPL attribution.
+- Turkish Ad Hosts as a separately attributed regional upstream for opt-in Pro/Ultra and TR Regional tiers.
+- Pre-publication churn gate comparing Standard and Ultra against the last release.
+- Parent-domain protection for allowlisted critical service hosts.
+- Regression tests for regional selection, protected hosts and release guard.
+
+### Changed
+
+- Upstream SHA-256 manifest is described as a provenance snapshot, not a pinned integrity lock.
+- Core TR stays independently evidenced; imported regional entries remain in separately licensed aggregates.
+
 ## 0.2.2 — 2026-09-23
 
 ### Added

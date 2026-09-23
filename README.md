@@ -6,6 +6,7 @@ OSFilter iki ayrı değeri bir araya getirir:
 
 1. **Core TR** — Osman İlçektuğ tarafından bağımsız olarak doğrulanan Türkiye-odaklı reklam/izleyici domainleri.
 2. **Global tiers** — lisansı açıkça uyumlu upstream verilerinin normalize, deduplicate ve allowlist işlemlerinden geçirilmiş DNS çıktıları.
+3. **TR Regional** — lisanslı Turkish Ad Hosts verisi, global kaynaklardan otomatik seçilen `.tr` reklam/izleyici alan adları ve Core TR; GPL lisanslı bölgesel birleşim. Özgün Core TR verisiyle karıştırılmamalıdır.
 
 Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalışırken kaynağı, lisansı, yanlış pozitifleri ve build bütünlüğünü denetlenebilir tutmaktır.
 
@@ -16,8 +17,10 @@ Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalı
 | **Core TR** | Türkiye'ye özgü bağımsız katman | onlarca → büyüyor | OSFilter |
 | **Lite** | düşük bozulma riski | 40K+ | HaGeZi Light + Core TR |
 | **Standard** | varsayılan dengeli liste | 160K+ | Lite + HaGeZi Normal + Core TR |
-| **Pro** | daha geniş koruma | 220K+ | Standard + HaGeZi Pro + Core TR |
+| **Pro** | daha geniş koruma | 220K+ | Standard + HaGeZi Pro + Turkish Ad Hosts + Core TR |
 | **Ultra** | agresif çok-kaynaklı koruma | 500K+ | Pro + HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
+| **TR Regional** | otomatik Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Standard içindeki `.tr` alan adları + Core TR |
+| **TR Regional Ultra** | agresif Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Ultra içindeki `.tr` alan adları + Core TR |
 
 Kesin sayılar her build'de `stats.json` içine yazılır. Tier'lar kümülatiftir: daha yüksek bir seviyeye geçtiğinizde alt seviyede engellenen bir domain sessizce açılmaz. Build sistemi Standard için 100K, Pro için 150K ve Ultra için 250K altına düşen beklenmedik çıktıyı yayınlamaz.
 
@@ -32,6 +35,10 @@ Kesin sayılar her build'de `stats.json` içine yazılır. Tier'lar kümülatift
 | **Standard** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/osfilter.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/domains.txt |
 | **Pro** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro-domains.txt |
 | **Ultra** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-domains.txt |
+| **TR Regional** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-domains.txt |
+| **TR Regional Ultra** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-ultra.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-ultra-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-ultra-domains.txt |
+
+TR Regional listeleri her günlük build'de **otomatik dolar**. Turkish Ad Hosts'un Türkiye uygulamalarında incelenmiş DNS verisini ve global upstream'lerin `.tr` alan adlarını birleştirir; kamu/eğitim alan adları ve giriş/ödeme gibi hassas host etiketlerini otomatik katmandan çıkarır. Bölgesel upstream'in `.com` kayıtları da bu çıktıya girer; diğer `.com` alan adları ülkesine bakılarak otomatik sınıflandırılmaz. Standard ile daha geniş Türkiye kapsamı isteyenler TR Regional'ı ayrıca kullanabilir. Pro/Ultra Turkish Ad Hosts'u zaten içerir; bunlarla TR Regional'ı birlikte eklemek aynı kaynağın bir bölümünü tekrarlayabilir. Ultra katmanı yanlış engelleme riski daha yüksek olduğundan isteğe bağlıdır.
 
 Standard resolver outputs:
 
@@ -45,7 +52,7 @@ Build istatistikleri:
 
 https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/stats.json
 
-Upstream bütünlük kilidi (SHA-256, byte boyutu, final URL):
+Upstream kaynak anlık görüntüsü (SHA-256, byte boyutu, final URL; sabitlenmiş bir hash kilidi değildir):
 
 https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/upstream-lock.json
 
@@ -81,6 +88,7 @@ CI, lisans allowlist'ine uymayan veya beklenmedik boyutta gelen kaynakları redd
 
 - **HaGeZi:** GPL-3.0; GPL global tier'larda açıkça attribution ile kullanılabilir.
 - **Block List Project:** Unlicense/public-domain; Ultra tier'a ek sinyal sağlar.
+- **Turkish Ad Hosts:** GPL-3.0; Türkiye'deki mobil uygulamalara odaklı bölgesel DNS verisi Pro/Ultra ve TR Regional çıktılarda kullanılır. Üçüncü taraf projeye atıf korunur.
 - **AdGuard Filters:** güçlü kaynak, ancak cosmetic/scriptlet gibi DNS dışı kurallar içerdiğinden otomatik DNS importu ayrı extractor denetimi gerektirir.
 - **GoodbyeAds:** repo seviyesi MIT olsa da belgelenen upstream seti karışık lisanslar içeriyor; wholesale import yapılmıyor.
 - **WindowsSpyBlocker:** MIT fakat Windows fonksiyonlarını etkileyebilecek telemetry blokları içeriyor; varsayılan reklam tier'larına eklenmiyor.
@@ -122,6 +130,7 @@ GitHub Actions:
 - **her gün 10:23 UTC**
 
 tüm upstream'leri yeniden indirir, normalize eder, duplicate'leri temizler, allowlist uygular ve `dist` dalını atomik olarak yeniden yayınlar.
+Yayınlamadan önce Standard ve Ultra çıktıları bir önceki sürümle karşılaştırılır; herhangi birinde eklenen veya çıkan kayıtlar önceki sürümün %10'unu aşarsa otomatik yayın durur ve kaynaklar incelenir.
 
 ## Formatlar
 
@@ -143,6 +152,7 @@ DNS filtresi YouTube, Instagram, Twitch gibi servislerde içerik ile reklam ayn�
 - build/test/automation kodu: **AGPL-3.0-only**
 - bağımsız OSFilter Core TR verisi: **ODbL-1.0 OR GPL-3.0-only**
 - HaGeZi içeren global aggregate çıktılar: **GPL-3.0-only**
+- Upstream içeren TR Regional çıktılar: **GPL-3.0-only**
 - dokümantasyon: **CC BY-SA 4.0**
 - OSFilter adı, logo ve Osman İlçektuğ'un kişisel marka hakları ayrıca saklıdır
 

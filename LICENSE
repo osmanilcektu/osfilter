@@ -38,10 +38,10 @@ This applies to OSFilter-authored/local data in:
 The GPL option exists so the same original OSFilter data can be legally
 combined into GPL-3.0 aggregate tiers.
 
-3. GLOBAL AGGREGATE OUTPUTS
+3. GLOBAL AND REGIONAL AGGREGATE OUTPUTS
 
 The following outputs include or are derived from GPL-3.0-only upstream data
-from HaGeZi DNS Blocklists; Ultra also incorporates public-domain data from the Block List Project. Because the aggregate includes GPL-3.0 material, these outputs are distributed under GPL-3.0-only:
+from HaGeZi DNS Blocklists and Turkish Ad Hosts; Ultra also incorporates public-domain data from the Block List Project. Because the aggregate includes GPL-3.0 material, these outputs are distributed under GPL-3.0-only:
 
 - osfilter.txt
 - hosts.txt
@@ -58,6 +58,12 @@ from HaGeZi DNS Blocklists; Ultra also incorporates public-domain data from the 
 - lists/osfilter-ultra.txt
 - lists/osfilter-ultra-hosts.txt
 - lists/osfilter-ultra-domains.txt
+- lists/osfilter-tr-regional.txt
+- lists/osfilter-tr-regional-hosts.txt
+- lists/osfilter-tr-regional-domains.txt
+- lists/osfilter-tr-regional-ultra.txt
+- lists/osfilter-tr-regional-ultra-hosts.txt
+- lists/osfilter-tr-regional-ultra-domains.txt
 
 See THIRD_PARTY_NOTICES.md and sources/upstreams.json for attribution and
 source policy.
