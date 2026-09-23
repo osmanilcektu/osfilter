@@ -1,21 +1,52 @@
-MIT License
-
+OSFilter Licensing Notice
 Copyright (c) 2026 Osman İlçektuğ
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated data files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This repository intentionally uses separate licenses for software and filter data.
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+1. SOFTWARE / AUTOMATION CODE
+Files under scripts/, tests/ and .github/ are licensed under:
+GNU Affero General Public License v3.0 only (AGPL-3.0-only).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+License text and terms:
+https://www.gnu.org/licenses/agpl-3.0.html
+
+2. FILTER DATABASE / GENERATED LISTS
+The domain database and generated filtering outputs, including:
+- sources/*.txt
+- sources/evidence.csv
+- allowlist.txt
+- osfilter.txt
+- hosts.txt
+- domains.txt
+- lists/*.txt
+- stats.json
+
+are licensed under:
+Open Data Commons Open Database License v1.0 (ODbL-1.0).
+
+License text and terms:
+https://opendatacommons.org/licenses/odbl/1-0/
+
+The ODbL permits use, including commercial use, subject to its attribution
+and share-alike requirements for the database and qualifying derivative
+databases. This is intentional so DNS providers and security products may
+integrate OSFilter without turning the maintained database into a closed,
+rebranded derivative.
+
+3. DOCUMENTATION
+README.md, CONTRIBUTING.md and docs/ are licensed under CC BY-SA 4.0 unless
+a file states otherwise.
+
+License text and terms:
+https://creativecommons.org/licenses/by-sa/4.0/
+
+4. NAME, LOGO AND BRAND
+The OSFilter name, logos, visual identity and the personal identity of the
+maintainer are not granted as trademarks by the licenses above. No license
+grants permission to imply endorsement, official partnership or authorship
+by Osman İlçektuğ.
+
+SPDX identifiers:
+AGPL-3.0-only
+ODbL-1.0
+CC-BY-SA-4.0
