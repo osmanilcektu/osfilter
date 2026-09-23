@@ -21,6 +21,9 @@ Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalı
 | **Ultra** | agresif çok-kaynaklı koruma | 500K+ | Pro + HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
 | **TR Regional** | otomatik Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Standard içindeki `.tr` alan adları + Core TR |
 | **TR Regional Ultra** | agresif Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Ultra içindeki `.tr` alan adları + Core TR |
+| **Security (isteğe bağlı)** | zararlı yazılım, oltalama ve dolandırıcılık alan adları | `stats.json` | HaGeZi Threat Intelligence Feeds Mini + kanıtlı yerel kayıtlar |
+| **Gambling (isteğe bağlı)** | küresel ve Türkiye odaklı kumar engelleme | `stats.json` | HaGeZi Gambling Medium + Turk-AdFilter Bahis |
+| **Gambling TR (isteğe bağlı)** | Türkiye odaklı kumar engelleme | `stats.json` | Turk-AdFilter Bahis + kanıtlı yerel kayıtlar |
 
 Kesin sayılar her build'de `stats.json` içine yazılır. Tier'lar kümülatiftir: daha yüksek bir seviyeye geçtiğinizde alt seviyede engellenen bir domain sessizce açılmaz. Build sistemi Standard için 100K, Pro için 150K ve Ultra için 250K altına düşen beklenmedik çıktıyı yayınlamaz.
 
@@ -37,8 +40,13 @@ Kesin sayılar her build'de `stats.json` içine yazılır. Tier'lar kümülatift
 | **Ultra** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-domains.txt |
 | **TR Regional** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-domains.txt |
 | **TR Regional Ultra** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-ultra.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-ultra-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-tr-regional-ultra-domains.txt |
+| **Security (isteğe bağlı)** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-security.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-security-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-security-domains.txt |
+| **Gambling (isteğe bağlı)** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-domains.txt |
+| **Gambling TR (isteğe bağlı)** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-tr.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-tr-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-tr-domains.txt |
 
 TR Regional listeleri her günlük build'de **otomatik dolar**. Turkish Ad Hosts'un Türkiye uygulamalarında incelenmiş DNS verisini ve global upstream'lerin `.tr` alan adlarını birleştirir; kamu/eğitim alan adları ve giriş/ödeme gibi hassas host etiketlerini otomatik katmandan çıkarır. Bölgesel upstream'in `.com` kayıtları da bu çıktıya girer; diğer `.com` alan adları ülkesine bakılarak otomatik sınıflandırılmaz. Standard ile daha geniş Türkiye kapsamı isteyenler TR Regional'ı ayrıca kullanabilir. Pro/Ultra Turkish Ad Hosts'u zaten içerir; bunlarla TR Regional'ı birlikte eklemek aynı kaynağın bir bölümünü tekrarlayabilir. Ultra katmanı yanlış engelleme riski daha yüksek olduğundan isteğe bağlıdır.
+
+Kumar ve güvenlik abonelikleri reklam listelerinden ayrıdır. Türkiye bahis kaynağındaki yalnızca **tam alan adı** kuralları DNS listesine alınır; kozmetik kurallar, URL yolları, joker karakterli kurallar ve istisnalar aktarılmaz. `Gambling TR`, `Gambling` içindeki Türkiye kaynağı bölümüdür; ikisini birlikte eklemek gerekmez. Bu çıktılar upstream birleşimleridir, bağımsız doğrulanmış Core TR sayısına dahil değildir. Hiçbir DNS listesi internetteki tüm reklam, kumar veya zararlı adresleri kapsadığını garanti edemez; aynı alan adından sunulan içerik DNS düzeyinde ayrılamaz.
 
 Standard resolver outputs:
 
@@ -81,6 +89,7 @@ Aktif kaynakların her biri için şu alanlar zorunludur:
 - açık lisans
 - beklenen minimum/maksimum entry sayısı
 - kullanılacağı tier
+- ayrı kategori kaynakları için `category` (`security`, `gambling`, `gambling_tr`)
 - kaynak biçimi (`domains`: satır başına tek alan adı)
 
 CI, lisans allowlist'ine uymayan, biçimi uyuşmayan veya beklenmedik boyutta gelen kaynakları reddeder.

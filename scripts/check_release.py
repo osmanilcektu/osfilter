@@ -16,6 +16,11 @@ CHECKED_FILES = (
     "lists/osfilter-tr-regional-domains.txt",
     "lists/osfilter-tr-regional-ultra-domains.txt",
 )
+OPTIONAL_FILES = (
+    "lists/osfilter-security-domains.txt",
+    "lists/osfilter-gambling-domains.txt",
+    "lists/osfilter-gambling-tr-domains.txt",
+)
 MAX_CHANGE_FRACTION = 0.10
 
 
@@ -33,7 +38,12 @@ def change_fractions(previous: set[str], current: set[str]) -> tuple[float, floa
 
 
 def check_release(previous_dir: Path, current_dir: Path = ROOT) -> None:
-    for filename in CHECKED_FILES:
+    for filename in CHECKED_FILES + OPTIONAL_FILES:
+        if filename in OPTIONAL_FILES and not (previous_dir / filename).exists():
+            if not read_domains(current_dir / filename):
+                raise ValueError(f"{filename}: initial category publication is empty")
+            print(f"{filename}: first publication; future changes capped at 10%")
+            continue
         previous = read_domains(previous_dir / filename)
         current = read_domains(current_dir / filename)
         added, removed = change_fractions(previous, current)

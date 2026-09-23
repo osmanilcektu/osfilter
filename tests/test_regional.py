@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from build import protected_block_rules  # noqa: E402
-from check_release import CHECKED_FILES, change_fractions, check_release  # noqa: E402
+from check_release import CHECKED_FILES, OPTIONAL_FILES, change_fractions, check_release  # noqa: E402
 from regional import is_sensitive_domain, regional_profile  # noqa: E402
 
 
@@ -69,4 +69,27 @@ class ReleaseGuardTests(unittest.TestCase):
                 "".join(f"d{n}.example.tr\n" for n in range(80)), encoding="utf-8"
             )
             with self.assertRaisesRegex(RuntimeError, "tr-regional-domains"):
+                check_release(previous, current)
+
+    def test_optional_first_publication_and_subsequent_wipeout(self):
+        with tempfile.TemporaryDirectory() as directory:
+            previous = Path(directory) / "previous"
+            current = Path(directory) / "current"
+            content = "".join(f"d{n}.example.org\n" for n in range(100))
+            for filename in CHECKED_FILES + OPTIONAL_FILES:
+                path = current / filename
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content, encoding="utf-8")
+            for filename in CHECKED_FILES:
+                path = previous / filename
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content, encoding="utf-8")
+            check_release(previous, current)
+            for filename in OPTIONAL_FILES:
+                path = previous / filename
+                path.write_text(content, encoding="utf-8")
+            (current / OPTIONAL_FILES[0]).write_text(
+                "".join(f"d{n}.example.org\n" for n in range(80)), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(RuntimeError, "osfilter-security-domains"):
                 check_release(previous, current)

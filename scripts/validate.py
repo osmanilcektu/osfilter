@@ -66,8 +66,11 @@ def validate_upstreams() -> list[str]:
         return [f"upstream config okunamadı: {exc}"]
 
     seen_tiers: set[str] = set()
-    for key, spec in cfg.get("active", {}).items():
+    for key, spec in {**cfg.get("active", {}), **cfg.get("category_feeds", {})}.items():
+        is_category = key in cfg.get("category_feeds", {})
         missing = required_fields - set(spec)
+        if is_category:
+            missing = (required_fields - {"tier"} | {"category"}) - set(spec)
         if missing:
             errors.append(f"{key}: eksik upstream alanları: {', '.join(sorted(missing))}")
             continue
@@ -76,14 +79,17 @@ def validate_upstreams() -> list[str]:
             errors.append(f"{key}: kaynak URL HTTPS olmalı")
         if urlparse(spec["homepage"]).scheme != "https":
             errors.append(f"{key}: homepage HTTPS olmalı")
-        if spec["tier"] not in allowed_tiers:
+        if is_category:
+            if spec["category"] not in {"security", "gambling", "gambling_tr"}:
+                errors.append(f"{key}: bilinmeyen kategori: {spec['category']}")
+        elif spec["tier"] not in allowed_tiers:
             errors.append(f"{key}: bilinmeyen tier: {spec['tier']}")
         else:
             seen_tiers.add(spec["tier"])
         if spec.get("region", "global") not in {"global", "tr"}:
             errors.append(f"{key}: region global veya tr olmalı")
-        if spec["format"] != "domains":
-            errors.append(f"{key}: yalnız doğrulanmış tek-domain-satır formatı desteklenir")
+        if spec["format"] not in ({"domains", "abp_dns"} if is_category else {"domains"}):
+            errors.append(f"{key}: kaynak formatı desteklenmiyor")
         if spec["license"] not in allowed_licenses:
             errors.append(f"{key}: allowlist dışı upstream lisansı: {spec['license']}")
         if not isinstance(spec["min_entries"], int) or not isinstance(spec["max_entries"], int):
@@ -94,6 +100,10 @@ def validate_upstreams() -> list[str]:
     missing_tiers = allowed_tiers - seen_tiers
     if missing_tiers:
         errors.append(f"upstream tier eksik: {', '.join(sorted(missing_tiers))}")
+    if {"security", "gambling", "gambling_tr"} - {
+        spec.get("category") for spec in cfg.get("category_feeds", {}).values()
+    }:
+        errors.append("isteğe bağlı security/gambling/gambling_tr kaynakları eksik")
 
     return errors
 

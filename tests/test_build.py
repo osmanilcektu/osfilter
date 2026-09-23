@@ -10,6 +10,7 @@ from build import (  # noqa: E402
     assert_tier_nesting,
     deterministic_serial,
     normalize_domain,
+    parse_abp_dns_line,
     parse_external_line,
     parse_plain_domain_line,
     previous_rpz_serial,
@@ -75,6 +76,14 @@ class ExternalParserTests(unittest.TestCase):
                      "ads.example.com # inline", "! comment", "com.tr"):
             with self.subTest(line=line):
                 self.assertIsNone(parse_plain_domain_line(line))
+
+    def test_category_abp_extractor_accepts_only_exact_hostnames(self):
+        self.assertEqual(parse_abp_dns_line("||BET.Example.COM^"), "bet.example.com")
+        for line in ("@@||bet.example.com^", "||bet*.example.com^",
+                     "||bet.example.com^$third-party", "||bet.example.com/path",
+                     "||bet.example.com^$badfilter", "bet.example.com##.ad"):
+            with self.subTest(line=line):
+                self.assertIsNone(parse_abp_dns_line(line))
 
 
 class ResolverFormatTests(unittest.TestCase):

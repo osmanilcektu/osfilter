@@ -100,6 +100,9 @@ jobs:
           - Ultra
           - TR Regional
           - TR Regional Ultra
+          - Security (optional)
+          - Gambling (optional)
+          - Gambling TR (optional)
 
           See:
           - stats.json for current entry counts

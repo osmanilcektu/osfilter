@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 — 2026-09-23
+
+### Added
+
+- Optional, daily updated Security, Gambling and Gambling TR domain categories with Adblock, hosts and plain-domain outputs.
+- HaGeZi Threat Intelligence Feeds Mini, Gambling Medium and DNS-only Turk-AdFilter Bahis inputs, with explicit GPL attribution and source provenance.
+- Publication-churn checks for optional categories after their initial nonempty release.
+
+### Changed
+
+- Keep upstream category domains separate from the independently evidenced Core TR and default advertising tiers.
+- Record optional category sizes separately in `stats.json`.
+
 ## 0.3.1 — 2026-09-23
 
 ### Fixed

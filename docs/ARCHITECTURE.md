@@ -32,6 +32,10 @@ The main `osfilter.txt`, `hosts.txt` and `domains.txt` files are the Standard ti
 
 TR Regional uses licensed Turkish Ad Hosts DNS data plus `.tr` entries already present in Standard and the reviewed Core TR. TR Regional Ultra uses the same regional source plus `.tr` entries from Ultra. Both are GPL aggregates, with separate output files, and never write upstream records into Core TR. Sensitive government/education suffixes and login/payment host labels are excluded from the automatic regional selection. Core TR additions still require independent evidence.
 
+## 4. Optional security and gambling categories
+
+Security imports HaGeZi Threat Intelligence Feeds Mini. Gambling combines HaGeZi Gambling Medium with the exact DNS rules of Turk-AdFilter Bahis; Gambling TR uses only the Turkish category feed. These GPL aggregates have separate Adblock, hosts and plain-domain outputs and do not feed the default advertising tiers or the independently evidenced Core TR. The Turkish ABP import skips exceptions, URL paths, cosmetic rules and wildcard expressions. The `stats.json` keys under `optional_categories` count the generated categories; `core_tr.security` and `core_tr.gambling_optional` count only independently evidenced local records.
+
 ## Why not union every public list?
 
 Blind unioning creates three problems:
@@ -52,7 +56,7 @@ For every enabled upstream:
 - OSFilter allowlist and DNS-blocking ancestors of protected hosts are removed before merge;
 - a minimum and maximum entry threshold prevents accidental empty/corrupt upstream builds;
 - outputs are sorted deterministically.
-- Lite, Standard, Pro, Ultra and both TR Regional release sets are compared to the previous `dist` publication; over 10% additions or removals stop automatic publishing.
+- Lite, Standard, Pro, Ultra, both TR Regional sets and previously published optional categories are compared to the previous `dist` publication; over 10% additions or removals stop automatic publishing. A new category can publish only with a nonempty list.
 - RPZ SOA serials advance from the previous published zones when domain contents change.
 
 ## Scale target
