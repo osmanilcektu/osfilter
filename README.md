@@ -1,99 +1,142 @@
 # OSFilter
 
-**Türkiye odaklı, kanıt tabanlı reklam ve izleyici engelleme listesi.**
+**Türkiye odaklı, kanıt tabanlı reklam ve izleyici engelleme projesi.**
 
-OSFilter; doğrulanmış domainlerden Adblock, hosts ve düz domain çıktıları üretir. Hedefi yalnızca büyük bir liste olmak değil; düşük false-positive oranı, açık provenance kayıtları ve sürekli testlerle Türkiye için güvenilir bir DNS filtre kaynağı olmaktır.
+OSFilter iki ayrı değeri bir araya getirir:
 
-## Durum
+1. **Core TR** — Osman İlçektuğ tarafından bağımsız olarak doğrulanan Türkiye-odaklı reklam/izleyici domainleri.
+2. **Global tiers** — lisansı açıkça uyumlu upstream verilerinin normalize, deduplicate ve allowlist işlemlerinden geçirilmiş DNS çıktıları.
 
-İlk veri seti oluşturuldu. Her domain `sources/evidence.csv` içinde kanıt ve güven seviyesiyle eşleştirilir. Kanıtsız domain CI tarafından reddedilir.
+Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalışırken kaynağı, lisansı, yanlış pozitifleri ve build bütünlüğünü denetlenebilir tutmaktır.
 
-## Kullanılabilir listeler
+## Güncel mimari
 
-| Liste | İçerik | RAW |
-| --- | --- | --- |
-| **OSFilter Full** | Reklam + izleyici + güvenlik + bahis/kumar | https://raw.githubusercontent.com/osmanilcektu/osfilter/main/osfilter.txt |
-| **OSFilter Lite** | Reklam + izleyici | https://raw.githubusercontent.com/osmanilcektu/osfilter/main/lists/osfilter-lite.txt |
-| **OSFilter Security** | Zararlı/phishing | https://raw.githubusercontent.com/osmanilcektu/osfilter/main/lists/osfilter-security.txt |
-| **OSFilter Gambling** | Bahis/kumar | https://raw.githubusercontent.com/osmanilcektu/osfilter/main/lists/osfilter-gambling.txt |
-| **hosts.txt** | Pi-hole / DNS / hosts | https://raw.githubusercontent.com/osmanilcektu/osfilter/main/hosts.txt |
-| **domains.txt** | Düz domain listesi | https://raw.githubusercontent.com/osmanilcektu/osfilter/main/domains.txt |
+| Tier | Amaç | Yaklaşık ölçek | Kaynak |
+| --- | --- | ---: | --- |
+| **Core TR** | Türkiye'ye özgü bağımsız katman | onlarca → büyüyor | OSFilter |
+| **Lite** | düşük bozulma riski | 40K+ | HaGeZi Light + Core TR |
+| **Standard** | varsayılan dengeli liste | 160K+ | HaGeZi Normal + Core TR |
+| **Pro** | daha geniş koruma | 229K+ | HaGeZi Pro + Core TR |
+| **Ultra** | agresif çok-kaynaklı koruma | 250K+ garanti eşiği | HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
+
+Kesin sayılar her build'de `stats.json` içine yazılır. Build sistemi Standard için 100K, Pro için 150K ve Ultra için 250K altına düşen beklenmedik çıktıyı yayınlamaz.
+
+## Kullanım — kararlı RAW bağlantılar
+
+Üretilen dosyalar ayrı `dist` dalında yayınlanır. Uygulamalara **main değil dist URL'lerini** ekleyin.
+
+| Liste | Adblock | Hosts | Düz domain |
+| --- | --- | --- | --- |
+| **Core TR** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-core.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-core-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-core-domains.txt |
+| **Lite** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-lite.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-lite-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-lite-domains.txt |
+| **Standard** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/osfilter.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/domains.txt |
+| **Pro** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro-domains.txt |
+| **Ultra** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-domains.txt |
+
+Build istatistikleri:
+
+https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/stats.json
 
 ## NextDNS hedefi
 
-OSFilter, NextDNS benzeri merkezi DNS servislerinde doğrudan seçilebilir bir bölgesel blocklist olabilecek şekilde hazırlanır.
+NextDNS başvurusu **Core TR** üzerinden yapılacaktır. Sebep basit: NextDNS zaten büyük küresel listeleri barındırabilir; OSFilter'ın orada anlamlı farkı, başka bir global listenin yeniden paketlenmesi değil, Türkiye'ye özgü bağımsız veri katmanıdır.
 
-Hazır NextDNS metadata tanımı:
+Hazır metadata:
 
 `integrations/nextdns/osfilter.json`
 
-Ayrıntılı yol haritası:
+Ayrıntılar:
 
 [docs/NEXTDNS.md](docs/NEXTDNS.md)
 
-NextDNS şu anda son kullanıcıların keyfi özel blocklist URL'lerini doğrudan eklemesine izin vermediğinden, OSFilter'ın NextDNS kataloğunda görünmesi için upstream kabul gerekir. Proje yeterli bakım geçmişi, kullanıcı tabanı ve benzersiz Türkiye kapsamına ulaşmadan bu başvuru yapılmayacaktır.
+## Upstream politikası
 
-## Kalite modeli
+Aktif ve araştırma amaçlı kaynaklar makine tarafından okunabilir biçimde:
 
-Gerçek veri `sources/` altında tutulur:
+`sources/upstreams.json`
 
-- `sources/ads.txt` — reklam
-- `sources/trackers.txt` — izleyici / attribution / sync
-- `sources/security.txt` — zararlı / phishing
-- `sources/gambling.txt` — isteğe bağlı bahis/kumar
-- `sources/evidence.csv` — her domain için provenance, kategori ve güven seviyesi
-- `allowlist.txt` — OSFilter içindeki yanlış pozitifleri bastırır
+Aktif kaynakların her biri için şu alanlar zorunludur:
 
-CI şu kontrolleri yapar:
+- HTTPS kaynak URL
+- proje homepage
+- açık lisans
+- beklenen minimum/maksimum entry sayısı
+- kullanılacağı tier
 
-- domain sözdizimi ve IDN/Punycode doğrulaması;
-- duplicate kontrolü;
-- kategori çakışması;
-- her domain için evidence zorunluluğu;
-- evidence kategori tutarlılığı;
-- unit testler;
-- deterministik çıktı üretimi.
+CI, lisans allowlist'ine uymayan veya beklenmedik boyutta gelen kaynakları reddeder.
 
-## Destek hedefleri
+### Neden her büyük listeyi doğrudan içeri almıyoruz?
 
-- uBlock Origin
-- AdGuard
-- Adblock Plus uyumlu motorlar
-- Pi-hole
-- AdGuard Home
-- Keenetic / Entware
-- NextDNS ve benzeri yönetilen DNS servisleri
+- **HaGeZi:** GPL-3.0; GPL global tier'larda açıkça attribution ile kullanılabilir.
+- **Block List Project:** Unlicense/public-domain; Ultra tier'a ek sinyal sağlar.
+- **AdGuard Filters:** güçlü kaynak, ancak cosmetic/scriptlet gibi DNS dışı kurallar içerdiğinden otomatik DNS importu ayrı extractor denetimi gerektirir.
+- **GoodbyeAds:** repo seviyesi MIT olsa da belgelenen upstream seti karışık lisanslar içeriyor; wholesale import yapılmıyor.
+- **WindowsSpyBlocker:** MIT fakat Windows fonksiyonlarını etkileyebilecek telemetry blokları içeriyor; varsayılan reklam tier'larına eklenmiyor.
+- **AdAway:** CC BY 3.0; araştırma sinyali olarak tutuluyor ve global tier zaten yeterli kapsama sahip olduğundan attribution zinciri gereksiz büyütülmüyor.
+- **StevenBlack unified hosts:** çok iyi bir agregatör örneği, ancak kendi içinde birden fazla upstream lisansı taşıyor; tek lisanslı kaynakmış gibi yeniden paketlenmiyor.
 
-DNS tabanlı engellemenin teknik sınırı nedeniyle YouTube, Instagram ve benzeri servislerde içerikle aynı alan adından sunulan reklamların tamamı DNS seviyesinde engellenemez. OSFilter bu nedenle işlevsel API/CDN alan adlarını agresif biçimde engelleyip uygulamaları bozmak yerine doğrulanmış reklam/izleme uç noktalarına odaklanır.
+Bu yaklaşım domain sayısını yapay biçimde şişirmek yerine hukuken ve teknik olarak izlenebilir bir ürün oluşturur.
 
-## Geliştirme
+## Core TR kalite modeli
 
-```bash
-python scripts/validate.py
-python -m unittest discover -s tests -v
-python scripts/build.py
-```
+Yerel veri:
 
-`main` üzerindeki kaynak değişikliklerinden sonra GitHub Actions şu çıktıları otomatik yeniler:
+- `sources/ads.txt`
+- `sources/trackers.txt`
+- `sources/security.txt`
+- `sources/gambling.txt`
+- `sources/evidence.csv`
+- `allowlist.txt`
 
-- `osfilter.txt`
-- `hosts.txt`
-- `domains.txt`
-- `stats.json`
-- `lists/*.txt`
+Her yerel domain için evidence kaydı zorunludur. CI:
 
-## Lisans ve koruma
+- domain/IDN/Punycode doğrulaması,
+- duplicate kontrolü,
+- kategori çakışması,
+- evidence eşleşmesi,
+- upstream lisans ve tier kontrolü,
+- parser testleri,
+- minimum tier boyut kapıları
 
-OSFilter tek bir gevşek lisans kullanmaz:
+uygular.
 
-- otomasyon ve test kodu: **AGPL-3.0-only**
-- filtre veritabanı ve üretilen listeler: **ODbL-1.0**
+## Otomatik güncelleme
+
+GitHub Actions:
+
+- her ilgili source/build değişikliğinde,
+- manuel çalıştırmada,
+- **her gün 10:23 UTC**
+
+tüm upstream'leri yeniden indirir, normalize eder, duplicate'leri temizler, allowlist uygular ve `dist` dalını atomik olarak yeniden yayınlar.
+
+## Formatlar
+
+OSFilter şu formatları doğrudan üretir:
+
+- Adblock / AdGuard Home / uBlock uyumlu domain kuralları
+- hosts
+- plain domains
+
+dnsmasq ve RPZ formatları sonraki compatibility katmanında aynı canonical domain setinden üretilebilir; yeni veri kaynağı eklemeyi gerektirmez.
+
+## DNS engellemenin sınırı
+
+DNS filtresi YouTube, Instagram, Twitch gibi servislerde içerik ile reklam aynı hostname/CDN üzerinden geliyorsa reklamı güvenli biçimde ayıramaz. “Daha çok domain = her reklamı keser” yaklaşımı uygulamaları bozabilir. OSFilter bu nedenle tier mantığı kullanır.
+
+## Lisans ve marka
+
+- build/test/automation kodu: **AGPL-3.0-only**
+- bağımsız OSFilter Core TR verisi: **ODbL-1.0 OR GPL-3.0-only**
+- HaGeZi içeren global aggregate çıktılar: **GPL-3.0-only**
 - dokümantasyon: **CC BY-SA 4.0**
-- **OSFilter adı, logo ve kişisel marka hakları ayrıca saklıdır**
+- OSFilter adı, logo ve Osman İlçektuğ'un kişisel marka hakları ayrıca saklıdır
 
-Bu yapı, NextDNS/AdGuard gibi servislerin listeyi entegre edebilmesine izin verirken türev veritabanlarının lisans yükümlülüklerini ortadan kaldırıp kapalı şekilde yeniden markalanmasını önlemeyi amaçlar.
+Ayrıntılar:
 
-Ayrıntılar: [LICENSE](LICENSE), [NOTICE.md](NOTICE.md), [LICENSES/](LICENSES/)
+- [LICENSE](LICENSE)
+- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- [LICENSES/](LICENSES/)
 
 ## Maintainer
 
@@ -104,6 +147,6 @@ Ayrıntılar: [LICENSE](LICENSE), [NOTICE.md](NOTICE.md), [LICENSES/](LICENSES/)
 
 ## Katkı
 
-Yanlış engellemeler ve kaçan reklam/izleyiciler GitHub Issues üzerinden bildirilebilir. Yeni domainler yalnız kanıt kaydıyla kabul edilir.
+Yanlış engelleme ve kaçan reklam/izleyici bildirimleri GitHub Issues üzerinden alınır. Yeni Core TR domainleri kanıt/provenance olmadan kabul edilmez.
 
-Katkı kuralları: [CONTRIBUTING.md](CONTRIBUTING.md)
+Katkı rehberi: [CONTRIBUTING.md](CONTRIBUTING.md)
