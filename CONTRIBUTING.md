@@ -1,6 +1,6 @@
 # OSFilter'a Katkı
 
-OSFilter'da amaç mümkün olan en büyük listeyi oluşturmak değil, yanlış pozitif oranı düşük ve gerekçesi doğrulanabilir bir liste tutmaktır.
+OSFilter'ın hedefi mümkün olan en büyük listeyi körlemesine oluşturmak değil; Türkiye'de anlamlı kapsama sahip, kanıtlanabilir ve düşük false-positive oranlı bir filtre veritabanı tutmaktır.
 
 ## Domain ekleme
 
@@ -21,17 +21,33 @@ https://ads.example.com/path
 0.0.0.0 ads.example.com
 ```
 
-Üretilen `osfilter.txt`, `hosts.txt` ve `lists/` dosyalarını elle düzenlemeyin.
+Aynı değişiklikte `sources/evidence.csv` içine de şu alanlarla bir kayıt eklenmelidir:
+
+```text
+domain,category,confidence,evidence_url,note
+```
+
+- `category`: `ads`, `trackers`, `security` veya `gambling`
+- `confidence`: `high` veya `medium`
+- `evidence_url`: HTTPS ile erişilen doğrulanabilir kaynak
+- `note`: domainin neden engellendiğine dair kısa gerekçe
+
+Kanıtsız domain CI tarafından kabul edilmez.
 
 ## Kabul ölçütleri
 
-Bir domain eklenmeden önce şu soruların karşılığı net olmalıdır:
+Bir domain eklenmeden önce:
 
-1. Domain gerçekten reklam, izleyici, zararlı/phishing veya ilgili kategoriye mi ait?
-2. Normal site işlevini bozma ihtimali var mı?
-3. Birinci taraf içerik/CDN/API domaini mi?
-4. Türkiye kullanıcısı açısından anlamlı mı?
-5. Yanlış pozitif oluşursa `allowlist.txt` ile güvenli şekilde düzeltilebilir mi?
+1. Reklam/izleyici/güvenlik/kategori işlevi doğrulanmış olmalı.
+2. Ana site işlevini veya oturum açmayı bozma riski değerlendirilmiş olmalı.
+3. Birinci taraf API/CDN alan adı yalnız adı şüpheli göründüğü için engellenmemeli.
+4. Türkiye kullanıcısı açısından anlamlı kapsama katkısı olmalı veya Türkiye'de yaygın kullanılan bir reklam/izleme altyapısı olmalı.
+5. Kanıt bağlantısı bulunmalı.
+6. Mevcut allowlist ve kategorilerle çakışmamalı.
+
+## Üretilen dosyalar
+
+`osfilter.txt`, `hosts.txt`, `domains.txt`, `stats.json` ve `lists/` dosyalarını elle düzenlemeyin.
 
 ## Yerel kontrol
 
@@ -41,4 +57,8 @@ python -m unittest discover -s tests -v
 python scripts/build.py
 ```
 
-Pull request'lerde GitHub Actions aynı doğrulamaları otomatik çalıştırır.
+Pull request'lerde aynı doğrulamalar GitHub Actions tarafından çalıştırılır.
+
+## Lisans
+
+Katkı göndererek ilgili dosyanın [LICENSE](LICENSE) içinde tanımlanan lisansına uygun olarak katkı sağladığınızı kabul etmiş olursunuz.
