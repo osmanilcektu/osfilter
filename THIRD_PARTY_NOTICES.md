@@ -1,0 +1,75 @@
+# Third-party notices
+
+OSFilter contains an independently maintained Türkiye-focused Core TR dataset and separately publishes global aggregate tiers.
+
+## HaGeZi DNS Blocklists
+
+OSFilter Lite, Standard, Pro and Ultra use HaGeZi DNS Blocklists as global baseline components. The separately subscribed Security and Gambling categories use the Threat Intelligence Feeds Mini and Gambling Medium domain-only outputs.
+
+- Project: https://github.com/hagezi/dns-blocklists
+- License: GNU General Public License v3.0 only (GPL-3.0-only)
+- Inputs: HaGeZi domain-only wildcard outputs
+- OSFilter modifications: normalization, deduplication, allowlist application, Türkiye-specific additions, tier composition, metadata and output-format generation
+
+HaGeZi is an independent project and does not endorse OSFilter.
+
+## Block List Project
+
+OSFilter Ultra additionally uses the Block List Project Ads and Tracking domain lists.
+
+- Project: https://github.com/blocklistproject/Lists
+- License: Unlicense / public-domain dedication
+- Inputs: Ads and Tracking plain-domain outputs
+- OSFilter modifications: normalization, deduplication, allowlist application and tier composition
+
+The Block List Project is independent and does not endorse OSFilter.
+
+## Turkish Ad Hosts
+
+OSFilter Pro, Ultra and TR Regional use the plain DNS output of Turkish Ad Hosts by Ali Beyaz.
+
+- Project: https://github.com/symbuzzer/Turkish-Ad-Hosts
+- License: GNU General Public License v3.0 (GPL-3.0)
+- Input: `dns` plain-domain output
+- OSFilter modifications: DNS validation, normalization, deduplication, protected-service filtering, tier composition and output-format generation
+
+Turkish Ad Hosts is independent and does not endorse OSFilter. Its data is upstream-derived in the aggregate outputs, not part of OSFilter's independently curated Core TR.
+
+## Turk-AdFilter Bahis
+
+OSFilter's optional Gambling and Gambling TR categories use exact domain-blocking rules from Turk-AdFilter Bahis by omerdduran.
+
+- Project: https://github.com/omerdduran/turk-adfilter
+- License: GNU General Public License v3.0 (GPL-3.0)
+- Input: `turk-adfilter-bahis.txt` (only `||domain^` rules, excluding exceptions, paths and cosmetic filters)
+- OSFilter modifications: DNS-only extraction, normalization, deduplication, protected-service filtering and format generation
+
+Turk-AdFilter is independent and does not endorse OSFilter. Imported entries are not part of OSFilter Core TR.
+
+## Mobile and Türkiye advertising inputs
+
+The global tiers also use exact DNS-safe mobile ad rules from AdGuard Mobile Ads and the Turkish ads/tracking Lite feed from Turk-AdFilter. Conditional rules, paths, exceptions, wildcards and cosmetic selectors are not converted to DNS blocks.
+
+- AdGuard Mobile Ads: https://github.com/AdguardTeam/AdguardFilters — GPL-3.0-only; `MobileFilter/sections/adservers.txt` (exact `||domain^` rules only).
+- Turk-AdFilter Lite: https://github.com/omerdduran/turk-adfilter — GPL-3.0; `turk-adfilter-lite.txt` (exact `||domain^` rules only).
+- OSFilter modifications: strict extraction, normalization, protected-service filtering, deduplication, tier composition and output generation.
+
+The exact `crosspromo.voodoo.io` rule is additionally reviewed as a Core TR advertising entry with a reference to AdGuard Mobile Ads. Voodoo does not endorse OSFilter, and the rule cannot guarantee ad removal across all Voodoo games.
+
+## Research-only projects
+
+Reviewed for architecture, coverage or validation, but not wholesale-imported into the current default build:
+
+- Other AdGuard Filters and conditional Mobile Ads rules — GPL-3.0-only; browser-only rules are not DNS-imported
+- GoodbyeAds — repository MIT license, but documented upstream provenance contains mixed licensing
+- WindowsSpyBlocker — MIT
+- AdAway default hosts — CC BY 3.0
+- StevenBlack unified hosts — mixed upstream licenses
+- bkrucarci turk-adlist — CC BY-SA 3.0; not combined into GPL aggregate outputs
+- Turk-AdFilter's full mixed-category list — GPL-3.0; only the dedicated Lite ads/tracking and Bahis category exact-domain rules are imported
+
+See `sources/upstreams.json` for the machine-readable source policy.
+
+## OSFilter Core TR
+
+OSFilter's independently curated Core TR dataset is dual-licensed under ODbL-1.0 OR GPL-3.0-only, at the recipient's option. This permits database-oriented integrations while also allowing the original OSFilter data to be legally combined with GPL-3.0 global tiers.

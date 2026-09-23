@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "sources": {
+    "hagezi_light": {
+      "name": "HaGeZi Multi LIGHT",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/light-onlydomains.txt",
+      "final_url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/light-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "domains",
+      "entries": 39849,
+      "bytes": 780777,
+      "sha256": "9be8c0916a4cd86ecdee340a6a4f8d86c705ef1cc0c3cc1e21ea15e711d774ba"
+    },
+    "hagezi_normal": {
+      "name": "HaGeZi Multi NORMAL",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi-onlydomains.txt",
+      "final_url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "domains",
+      "entries": 162636,
+      "bytes": 3312512,
+      "sha256": "54ced60402ea48e68e2789006b4c4c43f0a9a183b3549566ba13060d15f9a0b3"
+    },
+    "adguard_mobile_dns": {
+      "name": "AdGuard Mobile Ads — exact DNS rules",
+      "url": "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
+      "final_url": "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
+      "homepage": "https://github.com/AdguardTeam/AdguardFilters",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "abp_dns",
+      "entries": 897,
+      "bytes": 24128,
+      "sha256": "0732f1308a9ea991fe3a1e8e60c6c3713e760c227fc1348e25069949b5cd6eab"
+    },
+    "turk_adfilter_lite": {
+      "name": "Turk-AdFilter Lite — exact DNS rules",
+      "url": "https://raw.githubusercontent.com/omerdduran/turk-adfilter/main/turk-adfilter-lite.txt",
+      "final_url": "https://raw.githubusercontent.com/omerdduran/turk-adfilter/main/turk-adfilter-lite.txt",
+      "homepage": "https://github.com/omerdduran/turk-adfilter",
+      "license": "GPL-3.0-only",
+      "region": "tr",
+      "format": "abp_dns",
+      "entries": 1337,
+      "bytes": 370522,
+      "sha256": "c1d578ad6a716565c65f0b3a9d0c53280e7bbc8ad905ea7a7bf17bb2ef4af70a"
+    },
+    "turkish_ad_hosts": {
+      "name": "Turkish Ad Hosts by Ali Beyaz",
+      "url": "https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/dns",
+      "final_url": "https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/dns",
+      "homepage": "https://github.com/symbuzzer/Turkish-Ad-Hosts",
+      "license": "GPL-3.0-only",
+      "region": "tr",
+      "format": "domains",
+      "entries": 2458,
+      "bytes": 50155,
+      "sha256": "1471c8ec9cfa552c8f440a08eeb79dca4907539e7d72303deb0c65383ce3f9c9"
+    },
+    "hagezi_pro": {
+      "name": "HaGeZi Multi PRO",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt",
+      "final_url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "domains",
+      "entries": 225658,
+      "bytes": 4326617,
+      "sha256": "565ef6db3a772a27ee4d74a55c98f99ba018ac6d7c98a5c56ba6c717c04f4ebe"
+    },
+    "hagezi_ultimate": {
+      "name": "HaGeZi Multi ULTIMATE",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/ultimate-onlydomains.txt",
+      "final_url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/ultimate-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "domains",
+      "entries": 279949,
+      "bytes": 5428696,
+      "sha256": "ba49a2cfac357e3d9f20136a86d3a026ad6b11bcdd2372f12c652da24d8f2b21"
+    },
+    "blocklistproject_ads": {
+      "name": "Block List Project — Ads",
+      "url": "https://blocklistproject.github.io/Lists/alt-version/ads-nl.txt",
+      "final_url": "https://blocklistproject.github.io/Lists/alt-version/ads-nl.txt",
+      "homepage": "https://github.com/blocklistproject/Lists",
+      "license": "Unlicense",
+      "region": "global",
+      "format": "domains",
+      "entries": 233991,
+      "bytes": 4944431,
+      "sha256": "a35dc2d15d13104f26f8d7b3be19d1205b2c7977071f5ddc6794bdceca53feac"
+    },
+    "blocklistproject_tracking": {
+      "name": "Block List Project — Tracking",
+      "url": "https://blocklistproject.github.io/Lists/alt-version/tracking-nl.txt",
+      "final_url": "https://blocklistproject.github.io/Lists/alt-version/tracking-nl.txt",
+      "homepage": "https://github.com/blocklistproject/Lists",
+      "license": "Unlicense",
+      "region": "global",
+      "format": "domains",
+      "entries": 143866,
+      "bytes": 3064535,
+      "sha256": "09249af65f6ead4bfa04987b23fafaa0ebdbb922eec9eeba8f043074674fe011"
+    },
+    "hagezi_gambling_medium": {
+      "name": "HaGeZi Gambling Medium",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling.medium-onlydomains.txt",
+      "final_url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/gambling.medium-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "domains",
+      "entries": 194055,
+      "bytes": 3593785,
+      "sha256": "9553d3e65c9f136f697019ab81d3343dddfe245a070ec1fac8561c3d29fc453e",
+      "category": "gambling"
+    },
+    "hagezi_tif_mini": {
+      "name": "HaGeZi Threat Intelligence Feeds Mini",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.mini-onlydomains.txt",
+      "final_url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif.mini-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "region": "global",
+      "format": "domains",
+      "entries": 188797,
+      "bytes": 3429637,
+      "sha256": "bfddfe9039a61062ca29453fe4f674abf5ea2fad12c8335fddd616382d404a82",
+      "category": "security"
+    },
+    "turk_adfilter_bahis": {
+      "name": "Turk-AdFilter Bahis/Kumar Kalkanı",
+      "url": "https://raw.githubusercontent.com/omerdduran/turk-adfilter/main/turk-adfilter-bahis.txt",
+      "final_url": "https://raw.githubusercontent.com/omerdduran/turk-adfilter/main/turk-adfilter-bahis.txt",
+      "homepage": "https://github.com/omerdduran/turk-adfilter",
+      "license": "GPL-3.0-only",
+      "region": "tr",
+      "format": "abp_dns",
+      "entries": 84,
+      "bytes": 5024,
+      "sha256": "1703fcb1a417403c20550942e87e2b196c71dba2d68391c0cb94723257326789",
+      "category": "gambling_tr"
+    }
+  }
+}
