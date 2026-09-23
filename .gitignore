@@ -11,3 +11,8 @@ Thumbs.db
 /lists/*.txt
 /SHA256SUMS
 /artifacts/
+/dnsmasq.conf
+/unbound.conf
+/rpz.zone
+/lists/*.conf
+/lists/*.zone
