@@ -52,7 +52,7 @@ jobs:
           rm -rf "$DIST"
           mkdir -p "$DIST/lists" "$DIST/LICENSES"
 
-          cp osfilter.txt hosts.txt domains.txt stats.json "$DIST/"
+          cp osfilter.txt hosts.txt domains.txt stats.json SHA256SUMS "$DIST/"
           cp lists/*.txt "$DIST/lists/"
           cp LICENSE "$DIST/"
           cp THIRD_PARTY_NOTICES.md "$DIST/"
@@ -73,7 +73,14 @@ jobs:
           - hosts.txt — hosts
           - domains.txt — plain domains
 
-          See stats.json for current entry counts and THIRD_PARTY_NOTICES.md for attribution.
+          Additional tiers are under lists/:
+          - Core TR
+          - Lite
+          - Pro
+          - Ultra
+
+          See stats.json for current entry counts, SHA256SUMS for integrity,
+          and THIRD_PARTY_NOTICES.md for attribution.
           EOF
 
       - name: Publish orphan dist branch
