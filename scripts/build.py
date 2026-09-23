@@ -413,7 +413,9 @@ def assert_tier_nesting(
 
 
 def main() -> None:
-    allow = set(load_domain_file(ROOT / "allowlist.txt"))
+    manual_allow = set(load_domain_file(ROOT / "allowlist.txt"))
+    functional_allow = set(load_domain_file(ROOT / "sources" / "functional-allowlist.txt"))
+    allow = manual_allow | functional_allow
 
     categories: dict[str, list[str]] = {}
     for name, path in SOURCES.items():
@@ -674,6 +676,10 @@ def main() -> None:
             "ultra": len(ultra),
         },
         "allowlist": len(allow),
+        "allowlist_breakdown": {
+            "manual": len(manual_allow),
+            "functional_safety": len(functional_allow),
+        },
         "upstreams": upstream_stats,
     }
     write(ROOT / "stats.json", json.dumps(stats, ensure_ascii=False, indent=2) + "\n")
