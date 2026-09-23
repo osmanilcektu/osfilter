@@ -267,14 +267,32 @@ def main() -> None:
     for key, spec in cfg["active"].items():
         fetched, meta = fetch_upstream(key, spec)
         filtered = [domain for domain in fetched if domain not in allow]
-        tier_to_domains[spec["tier"]] = filtered
+        tier_to_domains.setdefault(spec["tier"], []).extend(filtered)
         upstream_stats[key] = meta
+
+    for tier in list(tier_to_domains):
+        tier_to_domains[tier] = unique_sorted(tier_to_domains[tier])
 
     lite = unique_sorted(tier_to_domains["lite"] + local_ads_trackers)
     standard = unique_sorted(tier_to_domains["standard"] + local_core)
     pro = unique_sorted(tier_to_domains["pro"] + local_core)
+    ultra = unique_sorted(tier_to_domains["ultra"] + local_core)
 
-    hagezi_notice = "HaGeZi DNS Blocklists (GPL-3.0-only) + OSFilter Core TR"
+    minimum_tier_sizes = {"lite": 30000, "standard": 100000, "pro": 150000, "ultra": 250000}
+    for tier_name, domains in {"lite": lite, "standard": standard, "pro": pro, "ultra": ultra}.items():
+        if len(domains) < minimum_tier_sizes[tier_name]:
+            raise RuntimeError(
+                f"{tier_name}: aggregate unexpectedly small: {len(domains)} "
+                f"< {minimum_tier_sizes[tier_name]}"
+            )
+
+    def tier_notice(tier_name: str) -> str:
+        names = [
+            upstream_stats[key]["name"]
+            for key, spec in cfg["active"].items()
+            if spec["tier"] == tier_name
+        ]
+        return " + ".join(names + ["OSFilter Core TR"])
 
     # Main aliases = Standard tier.
     write(
@@ -284,7 +302,7 @@ def main() -> None:
             "Balanced global DNS blocking plus independently curated Türkiye-specific OSFilter coverage.",
             standard,
             license_id="GPL-3.0-only",
-            upstream=hagezi_notice,
+            upstream=tier_notice("standard"),
         ),
     )
     write(
@@ -293,7 +311,7 @@ def main() -> None:
             "OSFilter — Standard hosts",
             standard,
             license_id="GPL-3.0-only",
-            upstream=hagezi_notice,
+            upstream=tier_notice("standard"),
         ),
     )
     write(
@@ -302,7 +320,7 @@ def main() -> None:
             "OSFilter — Standard domains",
             standard,
             license_id="GPL-3.0-only",
-            upstream=hagezi_notice,
+            upstream=tier_notice("standard"),
         ),
     )
 
@@ -347,6 +365,12 @@ def main() -> None:
             "OSFilter — Pro",
             "Extended global protection plus independently curated OSFilter Türkiye coverage.",
         ),
+        (
+            "ultra",
+            ultra,
+            "OSFilter — Ultra",
+            "Aggressive multi-source advertising/tracking protection using HaGeZi Ultimate, Block List Project and OSFilter Türkiye curation.",
+        ),
     ]:
         write(
             LISTS_DIR / f"osfilter-{tier_name}.txt",
@@ -355,7 +379,7 @@ def main() -> None:
                 description,
                 domains,
                 license_id="GPL-3.0-only",
-                upstream=hagezi_notice,
+                upstream=tier_notice(tier_name),
             ),
         )
         write(
@@ -364,7 +388,7 @@ def main() -> None:
                 f"{title} hosts",
                 domains,
                 license_id="GPL-3.0-only",
-                upstream=hagezi_notice,
+                upstream=tier_notice(tier_name),
             ),
         )
         write(
@@ -373,7 +397,7 @@ def main() -> None:
                 f"{title} domains",
                 domains,
                 license_id="GPL-3.0-only",
-                upstream=hagezi_notice,
+                upstream=tier_notice(tier_name),
             ),
         )
 
@@ -409,6 +433,7 @@ def main() -> None:
             "lite": len(lite),
             "standard": len(standard),
             "pro": len(pro),
+            "ultra": len(ultra),
         },
         "allowlist": len(allow),
         "upstreams": upstream_stats,
@@ -418,7 +443,7 @@ def main() -> None:
     print(
         "OSFilter build complete: "
         f"core={len(local_core)}, lite={len(lite)}, "
-        f"standard={len(standard)}, pro={len(pro)}"
+        f"standard={len(standard)}, pro={len(pro)}, ultra={len(ultra)}"
     )
 
 
