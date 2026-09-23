@@ -440,10 +440,13 @@ def main() -> None:
     for tier in list(tier_to_domains):
         tier_to_domains[tier] = unique_sorted(tier_to_domains[tier])
 
+    # OSFilter tiers are intentionally cumulative. Upstream projects may move
+    # individual domains between their own tiers; OSFilter guarantees that
+    # increasing protection never silently unblocks a domain from a lower tier.
     lite = unique_sorted(tier_to_domains["lite"] + local_ads_trackers)
-    standard = unique_sorted(tier_to_domains["standard"] + local_core)
-    pro = unique_sorted(tier_to_domains["pro"] + local_core)
-    ultra = unique_sorted(tier_to_domains["ultra"] + local_core)
+    standard = unique_sorted(lite + tier_to_domains["standard"] + local_core)
+    pro = unique_sorted(standard + tier_to_domains["pro"] + local_core)
+    ultra = unique_sorted(pro + tier_to_domains["ultra"] + local_core)
 
     minimum_tier_sizes = {
         "lite": 30000,
