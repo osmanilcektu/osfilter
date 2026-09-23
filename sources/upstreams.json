@@ -27,6 +27,33 @@
       "min_entries": 150000,
       "max_entries": 500000,
       "tier": "pro"
+    },
+    "hagezi_ultimate": {
+      "name": "HaGeZi Multi ULTIMATE",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/ultimate-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "min_entries": 220000,
+      "max_entries": 600000,
+      "tier": "ultra"
+    },
+    "blocklistproject_ads": {
+      "name": "Block List Project — Ads",
+      "url": "https://blocklistproject.github.io/Lists/alt-version/ads-nl.txt",
+      "homepage": "https://github.com/blocklistproject/Lists",
+      "license": "Unlicense",
+      "min_entries": 180000,
+      "max_entries": 500000,
+      "tier": "ultra"
+    },
+    "blocklistproject_tracking": {
+      "name": "Block List Project — Tracking",
+      "url": "https://blocklistproject.github.io/Lists/alt-version/tracking-nl.txt",
+      "homepage": "https://github.com/blocklistproject/Lists",
+      "license": "Unlicense",
+      "min_entries": 100000,
+      "max_entries": 350000,
+      "tier": "ultra"
     }
   },
   "research_only": {
@@ -34,25 +61,31 @@
       "name": "AdGuard Filters / Mobile Ads Filter",
       "homepage": "https://github.com/AdguardTeam/AdguardFilters",
       "license": "GPL-3.0-only",
-      "reason": "Rich Adblock syntax includes cosmetic and request rules. Use as a validation/research signal until the DNS-safe extractor is audited."
+      "reason": "Rich Adblock syntax includes cosmetic, scriptlet and request rules. Kept as a research signal until the DNS-safe extractor and attribution path are independently audited."
     },
     "goodbyeads": {
       "name": "GoodbyeAds",
       "homepage": "https://github.com/jerryn70/GoodbyeAds",
       "license": "MIT at repository level",
-      "reason": "The project documents mixed upstream provenance including copyleft, non-commercial, no-license and all-rights-reserved inputs. Do not wholesale-import into OSFilter until provenance is resolved."
+      "reason": "Its documented source set contains mixed licensing including copyleft, non-commercial, no-license and all-rights-reserved inputs; therefore OSFilter does not wholesale-import it."
     },
     "windows_spy_blocker": {
       "name": "WindowsSpyBlocker",
       "homepage": "https://github.com/crazy-max/WindowsSpyBlocker",
       "license": "MIT",
-      "reason": "Useful Windows telemetry research signal, but default host data is old and can affect Windows features. Keep out of default tiers until revalidated."
+      "reason": "Useful Windows telemetry research signal, but host data can intentionally disable Windows functionality and is kept out of default ad/tracking tiers."
     },
     "adaway": {
       "name": "AdAway default hosts",
       "homepage": "https://github.com/AdAway/adaway.github.io",
       "license": "CC BY 3.0",
-      "reason": "Useful mobile-ad signal. Kept outside the GPL aggregate until attribution and data-license treatment is explicitly reviewed."
+      "reason": "Useful mobile-ad signal. Kept research-only because the active global tiers already cover this space and OSFilter wants a simpler attribution chain."
+    },
+    "stevenblack_aggregate": {
+      "name": "StevenBlack unified hosts",
+      "homepage": "https://github.com/StevenBlack/hosts",
+      "license": "Mixed upstream licenses",
+      "reason": "Excellent architecture reference, but the aggregate includes multiple upstream licenses; OSFilter avoids importing the aggregate as a single relicensed source."
     }
   }
 }
