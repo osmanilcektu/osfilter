@@ -19,6 +19,16 @@
       "max_entries": 400000,
       "tier": "standard"
     },
+    "turkish_ad_hosts": {
+      "name": "Turkish Ad Hosts by Ali Beyaz",
+      "url": "https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/dns",
+      "homepage": "https://github.com/symbuzzer/Turkish-Ad-Hosts",
+      "license": "GPL-3.0-only",
+      "min_entries": 1500,
+      "max_entries": 10000,
+      "tier": "pro",
+      "region": "tr"
+    },
     "hagezi_pro": {
       "name": "HaGeZi Multi PRO",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt",
@@ -57,6 +67,18 @@
     }
   },
   "research_only": {
+    "bkrucarci_turk_adlist": {
+      "name": "bkrucarci turk-adlist",
+      "homepage": "https://github.com/bkrucarci/turk-adlist",
+      "license": "CC BY-SA 3.0",
+      "reason": "Its ShareAlike 3.0 terms are not folded into GPL aggregate outputs; use the original list directly or review individual domains independently."
+    },
+    "turk_adfilter": {
+      "name": "Turk-AdFilter",
+      "homepage": "https://github.com/omerdduran/turk-adfilter",
+      "license": "GPL-3.0",
+      "reason": "Its regional Lite output also contains many non-DNS rules; DNS-safe extraction and provenance audit are needed before import."
+    },
     "adguard_filters": {
       "name": "AdGuard Filters / Mobile Ads Filter",
       "homepage": "https://github.com/AdguardTeam/AdguardFilters",

@@ -24,6 +24,8 @@ Birden fazla upstream'de görülen adaylar incelemede daha yüksek öncelik alab
 
 Adaylar **otomatik olarak blocklist'e eklenmez**.
 
+Otomatik olarak güncellenen ayrı `TR Regional` çıktısı, lisanslı Turkish Ad Hosts verisini ve global upstream'lerin `.tr` kayıtlarını içerir. Bu çıktı GPL ile dağıtılır ve bağımsız Core TR sayısına dahil edilmez.
+
 ## Core TR'ye yükseltme kriteri
 
 Bir adayın `sources/ads.txt`, `sources/trackers.txt`, `sources/security.txt` veya `sources/gambling.txt` içine alınabilmesi için:

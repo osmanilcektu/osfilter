@@ -1,6 +1,6 @@
 # OSFilter marka ve atıf bildirimi
 
-OSFilter'ın filtre verileri ODbL-1.0, otomasyon kodu AGPL-3.0-only kapsamında lisanslanır.
+OSFilter Core TR özgün verisi ODbL-1.0 OR GPL-3.0-only, upstream kaynaklarla oluşturulan global/bölgesel birleşimler GPL-3.0-only, otomasyon kodu AGPL-3.0-only kapsamında lisanslanır. Ayrıntılı dosya kapsamı için LICENSE ve THIRD_PARTY_NOTICES.md dosyalarına bakın.
 
 Bu lisanslar OSFilter adını, logosunu, görsel kimliğini veya Osman İlçektuğ'un kişisel kimliğini bir ticari marka/endorsement olarak kullanma izni vermez.
 

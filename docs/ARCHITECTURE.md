@@ -22,10 +22,15 @@ Core TR is what should be proposed to managed DNS catalogs such as NextDNS becau
 These are single-subscription convenience lists for users who want broad protection plus the OSFilter Türkiye overlay.
 
 - Lite: HaGeZi Multi LIGHT + OSFilter local ads/trackers
-- Standard: HaGeZi Multi NORMAL + OSFilter Core TR
-- Pro: HaGeZi Multi PRO + OSFilter Core TR
+- Standard: Lite + HaGeZi Multi NORMAL + OSFilter Core TR
+- Pro: Standard + HaGeZi Multi PRO + Turkish Ad Hosts
+- Ultra: Pro + HaGeZi Multi ULTIMATE + Block List Project Ads/Tracking
 
 The main `osfilter.txt`, `hosts.txt` and `domains.txt` files are the Standard tier.
+
+## 3. Automatic regional aggregates
+
+TR Regional uses licensed Turkish Ad Hosts DNS data plus `.tr` entries already present in Standard and the reviewed Core TR. TR Regional Ultra uses the same regional source plus `.tr` entries from Ultra. Both are GPL aggregates, with separate output files, and never write upstream records into Core TR. Sensitive government/education suffixes and login/payment host labels are excluded from the automatic regional selection. Core TR additions still require independent evidence.
 
 ## Why not union every public list?
 
@@ -44,9 +49,10 @@ For every enabled upstream:
 - the response is normalized to FQDNs;
 - IP addresses, localhost and malformed entries are rejected;
 - duplicates are removed;
-- OSFilter allowlist is applied after merge;
+- OSFilter allowlist and DNS-blocking ancestors of protected hosts are removed before merge;
 - a minimum and maximum entry threshold prevents accidental empty/corrupt upstream builds;
 - outputs are sorted deterministically.
+- Standard and Ultra release sets are compared to the previous `dist` publication; over 10% additions or removals stop automatic publishing.
 
 ## Scale target
 

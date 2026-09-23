@@ -80,6 +80,8 @@ def validate_upstreams() -> list[str]:
             errors.append(f"{key}: bilinmeyen tier: {spec['tier']}")
         else:
             seen_tiers.add(spec["tier"])
+        if spec.get("region", "global") not in {"global", "tr"}:
+            errors.append(f"{key}: region global veya tr olmalı")
         if spec["license"] not in allowed_licenses:
             errors.append(f"{key}: allowlist dışı upstream lisansı: {spec['license']}")
         if not isinstance(spec["min_entries"], int) or not isinstance(spec["max_entries"], int):

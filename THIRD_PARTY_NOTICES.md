@@ -24,6 +24,17 @@ OSFilter Ultra additionally uses the Block List Project Ads and Tracking domain 
 
 The Block List Project is independent and does not endorse OSFilter.
 
+## Turkish Ad Hosts
+
+OSFilter Pro, Ultra and TR Regional use the plain DNS output of Turkish Ad Hosts by Ali Beyaz.
+
+- Project: https://github.com/symbuzzer/Turkish-Ad-Hosts
+- License: GNU General Public License v3.0 (GPL-3.0)
+- Input: `dns` plain-domain output
+- OSFilter modifications: DNS validation, normalization, deduplication, protected-service filtering, tier composition and output-format generation
+
+Turkish Ad Hosts is independent and does not endorse OSFilter. Its data is upstream-derived in the aggregate outputs, not part of OSFilter's independently curated Core TR.
+
 ## Research-only projects
 
 Reviewed for architecture, coverage or validation, but not wholesale-imported into the current default build:
@@ -33,6 +44,8 @@ Reviewed for architecture, coverage or validation, but not wholesale-imported in
 - WindowsSpyBlocker — MIT
 - AdAway default hosts — CC BY 3.0
 - StevenBlack unified hosts — mixed upstream licenses
+- bkrucarci turk-adlist — CC BY-SA 3.0; not combined into GPL aggregate outputs
+- Turk-AdFilter — GPL-3.0; Lite includes non-DNS rules and needs a separate extractor audit
 
 See `sources/upstreams.json` for the machine-readable source policy.
 
