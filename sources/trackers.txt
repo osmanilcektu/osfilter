@@ -1,0 +1,2 @@
+# OSFilter izleyici/telemetri kaynakları
+# Biçim: satır başına yalnızca bir alan adı.
