@@ -1,9 +1,9 @@
 {
   "name": "OSFilter — Core TR",
   "website": "https://github.com/osmanilcektu/osfilter",
-  "description": "Evidence-backed Turkey-focused DNS blocklist for advertising, tracking and security domains. The NextDNS integration intentionally points to OSFilter's independent regional dataset rather than repackaging global lists already available in NextDNS.",
+  "description": "Evidence-backed Turkey-focused DNS blocklist for advertising, tracking and security domains maintained independently by OSFilter.",
   "source": {
-    "url": "https://raw.githubusercontent.com/osmanilcektu/osfilter/main/lists/osfilter-core-hosts.txt",
+    "url": "https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-core-hosts.txt",
     "format": "hosts"
   }
 }
