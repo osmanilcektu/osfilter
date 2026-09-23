@@ -1,0 +1,37 @@
+name: Yanlış engelleme
+description: OSFilter nedeniyle bozulan veya yanlış engellenen bir alan adını bildirin.
+title: "[False Positive] "
+labels: ["false-positive"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Alan adı
+      placeholder: example.com
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Sorun
+      description: Hangi sayfa veya özellik çalışmıyor?
+    validations:
+      required: true
+  - type: dropdown
+    id: list
+    attributes:
+      label: Kullanılan liste
+      options:
+        - OSFilter Full
+        - OSFilter Lite
+        - OSFilter Security
+        - OSFilter Gambling
+        - hosts.txt
+        - Bilmiyorum
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Ek bilgi
+      description: Tarayıcı, engelleyici, ekran görüntüsü veya ağ isteği gibi doğrulamaya yardımcı bilgiler.
