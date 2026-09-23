@@ -1,0 +1,3 @@
+# OSFilter dahili izin listesi
+# Buradaki alan adları yalnızca OSFilter kaynaklarından çıkarılır.
+# Üretilen Adblock listesine global @@ whitelist kuralı olarak yazılmaz.
