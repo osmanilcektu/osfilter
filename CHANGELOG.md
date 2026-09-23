@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.2 — 2026-09-23
+
+### Added
+
+- Functional safety allowlist applied across all global tiers.
+- Provider-adoption checklist for NextDNS and AdGuard DNS.
+- Explicit validation for duplicate/overlapping manual and functional allowlist entries.
+
+### Changed
+
+- Documentation now reflects shipped dnsmasq, Unbound and RPZ outputs.
+- Build statistics now expose manual vs functional allowlist counts.
+
 ## 0.2.1 — 2026-09-23
 
 ### Added
