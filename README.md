@@ -16,10 +16,10 @@ Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalı
 | --- | --- | ---: | --- |
 | **Core TR** | Türkiye'ye özgü bağımsız katman | onlarca → büyüyor | OSFilter |
 | **Lite** | düşük bozulma riski | 40K+ | HaGeZi Light + Core TR |
-| **Standard** | varsayılan dengeli liste | 160K+ | Lite + HaGeZi Normal + Core TR |
+| **Standard** | varsayılan dengeli liste | 160K+ | Lite + HaGeZi Normal + AdGuard Mobile Ads + Turk-AdFilter Lite + Core TR |
 | **Pro** | daha geniş koruma | 220K+ | Standard + HaGeZi Pro + Turkish Ad Hosts + Core TR |
 | **Ultra** | agresif çok-kaynaklı koruma | 500K+ | Pro + HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
-| **TR Regional** | otomatik Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Standard içindeki `.tr` alan adları + Core TR |
+| **TR Regional** | otomatik Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Turk-AdFilter Lite + Standard içindeki `.tr` alan adları + Core TR |
 | **TR Regional Ultra** | agresif Türkiye kapsamı | `stats.json` | Turkish Ad Hosts + Ultra içindeki `.tr` alan adları + Core TR |
 | **Security (isteğe bağlı)** | zararlı yazılım, oltalama ve dolandırıcılık alan adları | `stats.json` | HaGeZi Threat Intelligence Feeds Mini + kanıtlı yerel kayıtlar |
 | **Gambling (isteğe bağlı)** | küresel ve Türkiye odaklı kumar engelleme | `stats.json` | HaGeZi Gambling Medium + Turk-AdFilter Bahis |
@@ -44,7 +44,9 @@ Kesin sayılar her build'de `stats.json` içine yazılır. Tier'lar kümülatift
 | **Gambling (isteğe bağlı)** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-domains.txt |
 | **Gambling TR (isteğe bağlı)** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-tr.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-tr-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-gambling-tr-domains.txt |
 
-TR Regional listeleri her günlük build'de **otomatik dolar**. Turkish Ad Hosts'un Türkiye uygulamalarında incelenmiş DNS verisini ve global upstream'lerin `.tr` alan adlarını birleştirir; kamu/eğitim alan adları ve giriş/ödeme gibi hassas host etiketlerini otomatik katmandan çıkarır. Bölgesel upstream'in `.com` kayıtları da bu çıktıya girer; diğer `.com` alan adları ülkesine bakılarak otomatik sınıflandırılmaz. Standard ile daha geniş Türkiye kapsamı isteyenler TR Regional'ı ayrıca kullanabilir. Pro/Ultra Turkish Ad Hosts'u zaten içerir; bunlarla TR Regional'ı birlikte eklemek aynı kaynağın bir bölümünü tekrarlayabilir. Ultra katmanı yanlış engelleme riski daha yüksek olduğundan isteğe bağlıdır.
+TR Regional listeleri her günlük build'de **otomatik dolar**. Turkish Ad Hosts ve Turk-AdFilter Lite'ın DNS için uygun tam alan adı kurallarını, ayrıca global kaynakların `.tr` alan adlarını birleştirir; kamu/eğitim alan adları ve giriş/ödeme gibi hassas host etiketlerini otomatik katmandan çıkarır. Bölgesel kaynakların `.com` kayıtları da bu çıktıya girer; diğer `.com` alan adları ülkesine bakılarak otomatik sınıflandırılmaz. Standard ile daha geniş Türkiye kapsamı isteyenler TR Regional'ı ayrıca kullanabilir. Standard artık Turk-AdFilter Lite kayıtlarını da içerir; bu abonelikleri birlikte eklemek aynı kaynağın bir bölümünü tekrarlayabilir. Ultra katmanı yanlış engelleme riski daha yüksek olduğundan isteğe bağlıdır.
+
+Voodoo'nun `crosspromo.voodoo.io` adlı oyunlar arası tanıtım adresi tam host olarak engellenir. Oyunların reklam ağları ve ödüllü reklam davranışları değişebilir; bu kayıt tüm Voodoo oyunlarında reklamsızlık garantisi vermez.
 
 Kumar ve güvenlik abonelikleri reklam listelerinden ayrıdır. Türkiye bahis kaynağındaki yalnızca **tam alan adı** kuralları DNS listesine alınır; kozmetik kurallar, URL yolları, joker karakterli kurallar ve istisnalar aktarılmaz. `Gambling TR`, `Gambling` içindeki Türkiye kaynağı bölümüdür; ikisini birlikte eklemek gerekmez. Bu çıktılar upstream birleşimleridir, bağımsız doğrulanmış Core TR sayısına dahil değildir. Hiçbir DNS listesi internetteki tüm reklam, kumar veya zararlı adresleri kapsadığını garanti edemez; aynı alan adından sunulan içerik DNS düzeyinde ayrılamaz.
 
@@ -90,7 +92,7 @@ Aktif kaynakların her biri için şu alanlar zorunludur:
 - beklenen minimum/maksimum entry sayısı
 - kullanılacağı tier
 - ayrı kategori kaynakları için `category` (`security`, `gambling`, `gambling_tr`)
-- kaynak biçimi (`domains`: satır başına tek alan adı)
+- kaynak biçimi (`domains`: satır başına tek alan adı; `abp_dns`: yalnız tam `||alan.adi^` kuralları)
 
 CI, lisans allowlist'ine uymayan, biçimi uyuşmayan veya beklenmedik boyutta gelen kaynakları reddeder.
 
@@ -99,7 +101,8 @@ CI, lisans allowlist'ine uymayan, biçimi uyuşmayan veya beklenmedik boyutta ge
 - **HaGeZi:** GPL-3.0; GPL global tier'larda açıkça attribution ile kullanılabilir.
 - **Block List Project:** Unlicense/public-domain; Ultra tier'a ek sinyal sağlar.
 - **Turkish Ad Hosts:** GPL-3.0; Türkiye'deki mobil uygulamalara odaklı bölgesel DNS verisi Pro/Ultra ve TR Regional çıktılarda kullanılır. Üçüncü taraf projeye atıf korunur.
-- **AdGuard Filters:** güçlü kaynak, ancak cosmetic/scriptlet gibi DNS dışı kurallar içerdiğinden otomatik DNS importu ayrı extractor denetimi gerektirir.
+- **AdGuard Mobile Ads:** GPL-3.0; `adservers.txt` içindeki yalnız tam alan adı kuralları Standard'a alınır. URL/cosmetic/scriptlet ve koşullu kurallar DNS'e çevrilmez.
+- **Turk-AdFilter Lite:** GPL-3.0; yalnız DNS'e uygun tam reklam/izleyici alan adları Standard ve TR Regional'da kullanılır. Karma tam liste ve sayfa içi kurallar aktarılmaz.
 - **GoodbyeAds:** repo seviyesi MIT olsa da belgelenen upstream seti karışık lisanslar içeriyor; wholesale import yapılmıyor.
 - **WindowsSpyBlocker:** MIT fakat Windows fonksiyonlarını etkileyebilecek telemetry blokları içeriyor; varsayılan reklam tier'larına eklenmiyor.
 - **AdAway:** CC BY 3.0; araştırma sinyali olarak tutuluyor ve global tier zaten yeterli kapsama sahip olduğundan attribution zinciri gereksiz büyütülmüyor.
@@ -155,7 +158,7 @@ OSFilter aynı canonical domain setinden doğrudan şu formatları üretir:
 
 ## DNS engellemenin sınırı
 
-DNS filtresi YouTube, Instagram, Twitch gibi servislerde içerik ile reklam aynı hostname/CDN üzerinden geliyorsa reklamı güvenli biçimde ayıramaz. “Daha çok domain = her reklamı keser” yaklaşımı uygulamaları bozabilir. OSFilter bu nedenle tier mantığı kullanır.
+DNS filtresi YouTube, Instagram, Twitch gibi servislerde içerik ile reklam aynı hostname/CDN üzerinden geliyorsa reklamı güvenli biçimde ayıramaz. Özellikle YouTube video reklamlarını DNS listesiyle sıfırlamaya çalışmak video oynatmayı bozabilir. Tarayıcıda istek/öğe seviyesinde filtre kullanan bir içerik engelleyici bu iş için uygundur; resmi YouTube uygulamasında DNS ile sıfır reklam garanti edilemez. “Daha çok domain = her reklamı keser” yaklaşımı uygulamaları bozabilir. OSFilter bu nedenle tier mantığı kullanır.
 
 ## Lisans ve marka
 

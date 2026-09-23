@@ -21,6 +21,27 @@
       "tier": "standard",
       "format": "domains"
     },
+    "adguard_mobile_dns": {
+      "name": "AdGuard Mobile Ads — exact DNS rules",
+      "url": "https://raw.githubusercontent.com/AdguardTeam/AdguardFilters/master/MobileFilter/sections/adservers.txt",
+      "homepage": "https://github.com/AdguardTeam/AdguardFilters",
+      "license": "GPL-3.0-only",
+      "min_entries": 500,
+      "max_entries": 3000,
+      "tier": "standard",
+      "format": "abp_dns"
+    },
+    "turk_adfilter_lite": {
+      "name": "Turk-AdFilter Lite — exact DNS rules",
+      "url": "https://raw.githubusercontent.com/omerdduran/turk-adfilter/main/turk-adfilter-lite.txt",
+      "homepage": "https://github.com/omerdduran/turk-adfilter",
+      "license": "GPL-3.0-only",
+      "min_entries": 900,
+      "max_entries": 4000,
+      "tier": "standard",
+      "region": "tr",
+      "format": "abp_dns"
+    },
     "turkish_ad_hosts": {
       "name": "Turkish Ad Hosts by Ali Beyaz",
       "url": "https://raw.githubusercontent.com/symbuzzer/Turkish-Ad-Hosts/main/dns",
@@ -84,13 +105,13 @@
       "name": "Turk-AdFilter",
       "homepage": "https://github.com/omerdduran/turk-adfilter",
       "license": "GPL-3.0",
-      "reason": "The main regional ads list includes cosmetic and non-DNS rules and needs a separate audited extractor. Only exact domain rules from its dedicated Bahis category are imported into optional gambling outputs."
+      "reason": "The full mixed-category list stays research-only. DNS-safe exact hostname rules from its Lite ads/tracking feed and dedicated Bahis feed are imported separately."
     },
     "adguard_filters": {
       "name": "AdGuard Filters / Mobile Ads Filter",
       "homepage": "https://github.com/AdguardTeam/AdguardFilters",
       "license": "GPL-3.0-only",
-      "reason": "Rich Adblock syntax includes cosmetic, scriptlet and request rules. Kept as a research signal until the DNS-safe extractor and attribution path are independently audited."
+      "reason": "Cosmetic, scriptlet and conditional rules still require a browser content filter; only exact hostname rules from the MobileFilter adservers section enter DNS outputs."
     },
     "goodbyeads": {
       "name": "GoodbyeAds",

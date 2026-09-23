@@ -46,17 +46,27 @@ OSFilter's optional Gambling and Gambling TR categories use exact domain-blockin
 
 Turk-AdFilter is independent and does not endorse OSFilter. Imported entries are not part of OSFilter Core TR.
 
+## Mobile and Türkiye advertising inputs
+
+The global tiers also use exact DNS-safe mobile ad rules from AdGuard Mobile Ads and the Turkish ads/tracking Lite feed from Turk-AdFilter. Conditional rules, paths, exceptions, wildcards and cosmetic selectors are not converted to DNS blocks.
+
+- AdGuard Mobile Ads: https://github.com/AdguardTeam/AdguardFilters — GPL-3.0-only; `MobileFilter/sections/adservers.txt` (exact `||domain^` rules only).
+- Turk-AdFilter Lite: https://github.com/omerdduran/turk-adfilter — GPL-3.0; `turk-adfilter-lite.txt` (exact `||domain^` rules only).
+- OSFilter modifications: strict extraction, normalization, protected-service filtering, deduplication, tier composition and output generation.
+
+The exact `crosspromo.voodoo.io` rule is additionally reviewed as a Core TR advertising entry with a reference to AdGuard Mobile Ads. Voodoo does not endorse OSFilter, and the rule cannot guarantee ad removal across all Voodoo games.
+
 ## Research-only projects
 
 Reviewed for architecture, coverage or validation, but not wholesale-imported into the current default build:
 
-- AdGuard Filters — GPL-3.0-only
+- Other AdGuard Filters and conditional Mobile Ads rules — GPL-3.0-only; browser-only rules are not DNS-imported
 - GoodbyeAds — repository MIT license, but documented upstream provenance contains mixed licensing
 - WindowsSpyBlocker — MIT
 - AdAway default hosts — CC BY 3.0
 - StevenBlack unified hosts — mixed upstream licenses
 - bkrucarci turk-adlist — CC BY-SA 3.0; not combined into GPL aggregate outputs
-- Turk-AdFilter's main ads list — GPL-3.0; Lite includes non-DNS rules and needs a separate extractor audit; only the dedicated Bahis category's exact-domain rules are imported
+- Turk-AdFilter's full mixed-category list — GPL-3.0; only the dedicated Lite ads/tracking and Bahis category exact-domain rules are imported
 
 See `sources/upstreams.json` for the machine-readable source policy.
 

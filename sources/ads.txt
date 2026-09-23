@@ -12,6 +12,7 @@ adservice.google.com.tr
 advertising.bulurum.com
 afs.googlesyndication.com
 cdn2.admatic.com.tr
+crosspromo.voodoo.io
 googletagservices.com
 jsc.mgid.com
 pagead2.googlesyndication.com
