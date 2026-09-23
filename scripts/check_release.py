@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from build import ROOT
@@ -22,6 +23,10 @@ OPTIONAL_FILES = (
     "lists/osfilter-gambling-tr-domains.txt",
 )
 MAX_CHANGE_FRACTION = 0.10
+REGIONAL_FILES = {
+    "lists/osfilter-tr-regional-domains.txt",
+    "lists/osfilter-tr-regional-ultra-domains.txt",
+}
 
 
 def read_domains(path: Path) -> set[str]:
@@ -37,6 +42,29 @@ def change_fractions(previous: set[str], current: set[str]) -> tuple[float, floa
     return len(current - previous) / len(previous), len(previous - current) / len(previous)
 
 
+def initial_regional_source_addition(
+    filename: str, previous_dir: Path, current_dir: Path,
+    previous: set[str], current: set[str],
+) -> bool:
+    """Allow only the new licensed Turkish feed's own domains on first import."""
+    if filename not in REGIONAL_FILES:
+        return False
+    try:
+        old = json.loads((previous_dir / "upstream-lock.json").read_text(encoding="utf-8"))
+        new = json.loads((current_dir / "upstream-lock.json").read_text(encoding="utf-8"))
+        source = read_domains(current_dir / "artifacts/turk-adfilter-lite-domains.txt")
+    except (OSError, ValueError, KeyError):
+        return False
+    key = "turk_adfilter_lite"
+    if key in old.get("sources", {}) or key not in new.get("sources", {}) or not source:
+        return False
+    if len(source) > new["sources"][key]["entries"]:
+        return False
+    # Changes unrelated to the new source still have the ordinary 10% budget.
+    unrelated = (current - previous) - source
+    return len(unrelated) / len(previous) <= MAX_CHANGE_FRACTION
+
+
 def check_release(previous_dir: Path, current_dir: Path = ROOT) -> None:
     for filename in CHECKED_FILES + OPTIONAL_FILES:
         if filename in OPTIONAL_FILES and not (previous_dir / filename).exists():
@@ -48,6 +76,11 @@ def check_release(previous_dir: Path, current_dir: Path = ROOT) -> None:
         current = read_domains(current_dir / filename)
         added, removed = change_fractions(previous, current)
         print(f"{filename}: +{added:.2%}, -{removed:.2%} vs published release")
+        if removed <= MAX_CHANGE_FRACTION and initial_regional_source_addition(
+            filename, previous_dir, current_dir, previous, current
+        ):
+            print(f"{filename}: first Turkish ads import verified against source domains")
+            continue
         if added > MAX_CHANGE_FRACTION or removed > MAX_CHANGE_FRACTION:
             raise RuntimeError(
                 f"{filename}: upstream churn exceeds {MAX_CHANGE_FRACTION:.0%}; "

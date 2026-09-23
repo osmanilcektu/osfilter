@@ -196,11 +196,13 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
     raw_sha256 = hashlib.sha256(raw_bytes).hexdigest()
     raw = raw_bytes.decode("utf-8-sig", errors="replace")
     raw_lines = raw.splitlines()
-    candidate_lines = sum(
-        1
-        for line in raw_lines
-        if line.strip() and not line.lstrip().startswith(("#", "!"))
-    )
+    if spec["format"] == "abp_dns":
+        candidate_lines = sum(line.lstrip().startswith("||") for line in raw_lines)
+    else:
+        candidate_lines = sum(
+            bool(line.strip()) and not line.lstrip().startswith(("#", "!"))
+            for line in raw_lines
+        )
 
     parser = {
         "domains": parse_plain_domain_line,
@@ -515,6 +517,9 @@ def main() -> None:
         tier_to_domains.setdefault(spec["tier"], []).extend(filtered)
         if spec.get("region") == "tr":
             regional_to_domains.setdefault(spec["tier"], []).extend(filtered)
+        if key == "turk_adfilter_lite":
+            write(ROOT / "artifacts" / "turk-adfilter-lite-domains.txt",
+                  "\n".join(filtered) + "\n")
         upstream_stats[key] = meta
 
     for key, spec in cfg["category_feeds"].items():

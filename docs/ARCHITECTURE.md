@@ -22,7 +22,7 @@ Core TR is what should be proposed to managed DNS catalogs such as NextDNS becau
 These are single-subscription convenience lists for users who want broad protection plus the OSFilter Türkiye overlay.
 
 - Lite: HaGeZi Multi LIGHT + OSFilter local ads/trackers
-- Standard: Lite + HaGeZi Multi NORMAL + OSFilter Core TR
+- Standard: Lite + HaGeZi Multi NORMAL + exact DNS-safe AdGuard Mobile Ads and Turk-AdFilter Lite rules + OSFilter Core TR
 - Pro: Standard + HaGeZi Multi PRO + Turkish Ad Hosts
 - Ultra: Pro + HaGeZi Multi ULTIMATE + Block List Project Ads/Tracking
 
@@ -30,7 +30,7 @@ The main `osfilter.txt`, `hosts.txt` and `domains.txt` files are the Standard ti
 
 ## 3. Automatic regional aggregates
 
-TR Regional uses licensed Turkish Ad Hosts DNS data plus `.tr` entries already present in Standard and the reviewed Core TR. TR Regional Ultra uses the same regional source plus `.tr` entries from Ultra. Both are GPL aggregates, with separate output files, and never write upstream records into Core TR. Sensitive government/education suffixes and login/payment host labels are excluded from the automatic regional selection. Core TR additions still require independent evidence.
+TR Regional uses licensed Turkish Ad Hosts and exact DNS-safe Turk-AdFilter Lite rules plus `.tr` entries already present in Standard and the reviewed Core TR. TR Regional Ultra uses these sources plus `.tr` entries from Ultra. Both are GPL aggregates, with separate output files, and never write upstream records into Core TR. Sensitive government/education suffixes and login/payment host labels are excluded from the automatic regional selection. Core TR additions still require independent evidence.
 
 ## 4. Optional security and gambling categories
 
@@ -57,6 +57,7 @@ For every enabled upstream:
 - a minimum and maximum entry threshold prevents accidental empty/corrupt upstream builds;
 - outputs are sorted deterministically.
 - Lite, Standard, Pro, Ultra, both TR Regional sets and previously published optional categories are compared to the previous `dist` publication; over 10% additions or removals stop automatic publishing. A new category can publish only with a nonempty list.
+- On the first import of Turk-AdFilter Lite, extra regional additions must be present in the fetched source snapshot; unrelated additions and removals still have the 10% limit. Later releases revert to the regular 10% gate.
 - RPZ SOA serials advance from the previous published zones when domain contents change.
 
 ## Scale target

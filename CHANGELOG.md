@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.1 — 2026-09-23
+
+### Added
+
+- DNS-safe mobile advertising rules from AdGuard Mobile Ads and Turk-AdFilter Lite, with distinct attribution and provenance.
+- An exact Voodoo cross-promotion hostname in Core TR with an AdGuard Mobile Ads evidence reference.
+- A one-time regional publication guard verifying additions from the new Turkish source; later builds return to the 10% gate.
+
+### Clarified
+
+- DNS cannot guarantee removal of YouTube in-video ads; browser content filtering is needed for that surface.
+
 ## 0.4.0 — 2026-09-23
 
 ### Added

@@ -88,7 +88,7 @@ def validate_upstreams() -> list[str]:
             seen_tiers.add(spec["tier"])
         if spec.get("region", "global") not in {"global", "tr"}:
             errors.append(f"{key}: region global veya tr olmalı")
-        if spec["format"] not in ({"domains", "abp_dns"} if is_category else {"domains"}):
+        if spec["format"] not in {"domains", "abp_dns"}:
             errors.append(f"{key}: kaynak formatı desteklenmiyor")
         if spec["license"] not in allowed_licenses:
             errors.append(f"{key}: allowlist dışı upstream lisansı: {spec['license']}")

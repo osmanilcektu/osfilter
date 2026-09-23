@@ -9,6 +9,7 @@ adservice.google.com.tr,ads,medium,https://github.com/bkrucarci/turk-adlist/blob
 advertising.bulurum.com,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Explicit advertising hostname; exact host only.
 afs.googlesyndication.com,ads,medium,https://github.com/bkrucarci/turk-adlist/blob/master/hosts,Google syndicated advertising hostname.
 cdn2.admatic.com.tr,ads,high,https://xenforo.gen.tr/konular/admatic-pageskin-reklam-nasil-eklenir.4594/,Published Admatic integration code loads advertising script from this hostname.
+crosspromo.voodoo.io,ads,medium,https://github.com/AdguardTeam/AdguardFilters/blob/master/MobileFilter/sections/adservers.txt,AdGuard Mobile Ads identifies this exact Voodoo cross-promotion hostname as an ad-serving rule; block only the hostname.
 googletagservices.com,ads,high,https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https,Google documents this host as a Publisher Tag advertising script source.
 jsc.mgid.com,ads,high,https://openadlibrary.com/tr/blog/how-to-identify-the-ad-network-behind-an-ad/,Identified as the MGID native-ad loader fingerprint.
 pagead2.googlesyndication.com,ads,high,https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https,Google documents this host for AdSense ad-tag scripts.

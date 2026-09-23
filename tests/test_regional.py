@@ -1,4 +1,5 @@
 import sys
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -92,4 +93,42 @@ class ReleaseGuardTests(unittest.TestCase):
                 "".join(f"d{n}.example.org\n" for n in range(80)), encoding="utf-8"
             )
             with self.assertRaisesRegex(RuntimeError, "osfilter-security-domains"):
+                check_release(previous, current)
+
+    def test_first_turkish_ads_import_allows_only_source_domain_additions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            previous, current = Path(directory) / "previous", Path(directory) / "current"
+            base = {f"d{n}.example.tr" for n in range(100)}
+            additions = {f"ad{n}.example.com" for n in range(40)}
+            for filename in CHECKED_FILES + OPTIONAL_FILES:
+                for root in (previous, current):
+                    path = root / filename
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text("\n".join(sorted(base)) + "\n", encoding="utf-8")
+            for filename in ("lists/osfilter-tr-regional-domains.txt",
+                             "lists/osfilter-tr-regional-ultra-domains.txt"):
+                (current / filename).write_text("\n".join(sorted(base | additions)) + "\n",
+                                                encoding="utf-8")
+            artifact = current / "artifacts/turk-adfilter-lite-domains.txt"
+            artifact.parent.mkdir(parents=True)
+            artifact.write_text("\n".join(sorted(additions)) + "\n", encoding="utf-8")
+            (previous / "upstream-lock.json").write_text(json.dumps({"sources": {}}))
+            (current / "upstream-lock.json").write_text(json.dumps({
+                "sources": {"turk_adfilter_lite": {"entries": 40}}
+            }))
+            check_release(previous, current)
+            (current / "lists/osfilter-tr-regional-domains.txt").write_text(
+                "\n".join(sorted(base | additions | {
+                    f"other{n}.example.com" for n in range(11)
+                })) + "\n", encoding="utf-8"
+            )
+            with self.assertRaisesRegex(RuntimeError, "tr-regional-domains"):
+                check_release(previous, current)
+            (current / "lists/osfilter-tr-regional-domains.txt").write_text(
+                "\n".join(sorted(base | additions)) + "\n", encoding="utf-8"
+            )
+            (previous / "upstream-lock.json").write_text(json.dumps({
+                "sources": {"turk_adfilter_lite": {"entries": 40}}
+            }))
+            with self.assertRaisesRegex(RuntimeError, "tr-regional-domains"):
                 check_release(previous, current)
