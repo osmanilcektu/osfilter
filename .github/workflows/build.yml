@@ -8,6 +8,7 @@ on:
       - "allowlist.txt"
       - "scripts/build.py"
       - "scripts/validate.py"
+      - "tests/**"
       - ".github/workflows/build.yml"
   schedule:
     - cron: "23 10 * * *"
@@ -23,11 +24,13 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout source branch
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,7 +55,7 @@ jobs:
           rm -rf "$DIST"
           mkdir -p "$DIST/lists" "$DIST/LICENSES"
 
-          cp osfilter.txt hosts.txt domains.txt dnsmasq.conf unbound.conf rpz.zone stats.json SHA256SUMS "$DIST/"
+          cp osfilter.txt hosts.txt domains.txt dnsmasq.conf unbound.conf rpz.zone              stats.json upstream-lock.json SHA256SUMS "$DIST/"
           cp lists/* "$DIST/lists/"
           cp LICENSE "$DIST/"
           cp THIRD_PARTY_NOTICES.md "$DIST/"
@@ -82,11 +85,32 @@ jobs:
           - Pro
           - Ultra
 
-          See stats.json for current entry counts, SHA256SUMS for integrity,
-          and THIRD_PARTY_NOTICES.md for attribution.
+          See:
+          - stats.json for current entry counts
+          - upstream-lock.json for upstream SHA-256/size provenance
+          - SHA256SUMS for generated-file integrity
+          - THIRD_PARTY_NOTICES.md for attribution
           EOF
 
+      - name: Check whether distribution changed
+        id: changes
+        run: |
+          DIST="$RUNNER_TEMP/osfilter-dist"
+          CHANGED=true
+
+          if git fetch --quiet origin dist:refs/remotes/origin/dist 2>/dev/null; then
+            if git show origin/dist:SHA256SUMS > "$RUNNER_TEMP/old-SHA256SUMS" 2>/dev/null; then
+              if cmp -s "$RUNNER_TEMP/old-SHA256SUMS" "$DIST/SHA256SUMS"; then
+                CHANGED=false
+              fi
+            fi
+          fi
+
+          echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
+          echo "Distribution changed: $CHANGED"
+
       - name: Publish orphan dist branch
+        if: steps.changes.outputs.changed == 'true'
         run: |
           DIST="$RUNNER_TEMP/osfilter-dist"
 
@@ -100,3 +124,7 @@ jobs:
           git add -f .
           git commit -m "build: publish OSFilter distribution"
           git push --force origin HEAD:dist
+
+      - name: No distribution changes
+        if: steps.changes.outputs.changed != 'true'
+        run: echo "Generated output is identical to current dist branch; publish skipped."
