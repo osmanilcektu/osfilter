@@ -33,6 +33,14 @@ Kesin sayılar her build'de `stats.json` içine yazılır. Build sistemi Standar
 | **Pro** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-pro-domains.txt |
 | **Ultra** | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-hosts.txt | https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/lists/osfilter-ultra-domains.txt |
 
+Standard resolver outputs:
+
+- dnsmasq 2.86+: https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/dnsmasq.conf
+- Unbound: https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/unbound.conf
+- BIND/Knot/PowerDNS-compatible RPZ zone: https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/rpz.zone
+
+Core TR resolver outputs are published under `dist/lists/osfilter-core-dnsmasq.conf`, `osfilter-core-unbound.conf` and `osfilter-core-rpz.zone`.
+
 Build istatistikleri:
 
 https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/stats.json
