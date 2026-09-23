@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from build import normalize_domain, parse_external_line  # noqa: E402
+from build import (  # noqa: E402\n    normalize_domain,\n    parse_external_line,\n    render_dnsmasq,\n    render_rpz,\n    render_unbound,\n)
 from discover_tr_candidates import is_turkey_domain  # noqa: E402
 
 
@@ -47,6 +47,27 @@ class ExternalParserTests(unittest.TestCase):
     def test_comments_and_localhost_are_ignored(self):
         self.assertIsNone(parse_external_line("# comment"))
         self.assertIsNone(parse_external_line("0.0.0.0 localhost"))
+
+
+class ResolverFormatTests(unittest.TestCase):
+    def test_dnsmasq_null_address(self):
+        text = render_dnsmasq(
+            "test", ["ads.example.com"], license_id="GPL-3.0-only"
+        )
+        self.assertIn("address=/ads.example.com/#", text)
+
+    def test_unbound_always_null(self):
+        text = render_unbound(
+            "test", ["ads.example.com"], license_id="GPL-3.0-only"
+        )
+        self.assertIn('local-zone: "ads.example.com" always_null', text)
+
+    def test_rpz_blocks_domain_and_subdomains(self):
+        text = render_rpz(
+            "test", ["ads.example.com"], license_id="GPL-3.0-only"
+        )
+        self.assertIn("ads.example.com CNAME .", text)
+        self.assertIn("*.ads.example.com CNAME .", text)
 
 
 class TurkeyCandidateTests(unittest.TestCase):
