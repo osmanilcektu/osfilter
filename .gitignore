@@ -3,3 +3,9 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 Thumbs.db
+
+/osfilter.txt
+/hosts.txt
+/domains.txt
+/stats.json
+/lists/*.txt
