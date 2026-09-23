@@ -1,0 +1,24 @@
+# OSFilter plain domains
+# One domain per line. Generated; do not edit directly.
+# Data-License: ODbL-1.0
+
+adserver.adklik.com.tr
+adserver.reklamstore.com
+adserver1.adtech.com.tr
+adservice.google.com.tr
+adsim.sabah.com.tr
+adsp.ciner.com.tr
+adsp.haberturk.com
+advertising.bulurum.com
+affiliateserver.hangikredi.com
+afs.googlesyndication.com
+cdn2.admatic.com.tr
+cm.g.doubleclick.net
+googletagservices.com
+jsc.mgid.com
+pagead2.googlesyndication.com
+pixel.rubiconproject.com
+securepubads.g.doubleclick.net
+sync.outbrain.com
+sync.taboola.com
+trc.taboola.com
