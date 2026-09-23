@@ -12,13 +12,17 @@ adsp.haberturk.com
 advertising.bulurum.com
 affiliateserver.hangikredi.com
 afs.googlesyndication.com
+analytics.tiktok.com
+bat.bing.com
 cdn2.admatic.com.tr
 cm.g.doubleclick.net
+dc.ads.linkedin.com
 googletagservices.com
 jsc.mgid.com
 pagead2.googlesyndication.com
 pixel.rubiconproject.com
 securepubads.g.doubleclick.net
+snap.licdn.com
 sync.outbrain.com
 sync.taboola.com
 trc.taboola.com

@@ -26,7 +26,11 @@
 
 ! --- İzleyici ---
 ||affiliateserver.hangikredi.com^
+||analytics.tiktok.com^
+||bat.bing.com^
 ||cm.g.doubleclick.net^
+||dc.ads.linkedin.com^
 ||pixel.rubiconproject.com^
+||snap.licdn.com^
 ||sync.outbrain.com^
 ||sync.taboola.com^
