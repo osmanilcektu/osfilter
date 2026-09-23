@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.1 — 2026-09-23
+
+### Added
+
+- Upstream integrity lock with SHA-256, byte size and final URL provenance.
+- HTML/truncated-source guards and parse-ratio sanity checks.
+- Deterministic RPZ serial generation.
+- Tier monotonicity tests and cumulative tier composition.
+
+### Changed
+
+- Lite/Standard/Pro/Ultra are now cumulative so upgrading a tier never silently unblocks a lower-tier domain.
+- Verified distribution sizes: Lite 39,865; Standard 164,051; Pro 245,882; Ultra 587,127.
+- Distribution publishing now skips identical generated output.
+
 ## 0.2.0 — 2026-09-23
 
 ### Added
