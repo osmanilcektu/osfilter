@@ -1,0 +1,2 @@
+# OSFilter isteğe bağlı bahis/kumar kaynakları
+# Biçim: satır başına yalnızca bir alan adı.
