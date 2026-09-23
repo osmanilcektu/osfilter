@@ -15,11 +15,11 @@ Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalı
 | --- | --- | ---: | --- |
 | **Core TR** | Türkiye'ye özgü bağımsız katman | onlarca → büyüyor | OSFilter |
 | **Lite** | düşük bozulma riski | 40K+ | HaGeZi Light + Core TR |
-| **Standard** | varsayılan dengeli liste | 160K+ | HaGeZi Normal + Core TR |
-| **Pro** | daha geniş koruma | 229K+ | HaGeZi Pro + Core TR |
-| **Ultra** | agresif çok-kaynaklı koruma | 500K+ (son doğrulanan: 564,725) | HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
+| **Standard** | varsayılan dengeli liste | 160K+ | Lite + HaGeZi Normal + Core TR |
+| **Pro** | daha geniş koruma | 220K+ | Standard + HaGeZi Pro + Core TR |
+| **Ultra** | agresif çok-kaynaklı koruma | 500K+ | Pro + HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
 
-Kesin sayılar her build'de `stats.json` içine yazılır. Build sistemi Standard için 100K, Pro için 150K ve Ultra için 250K altına düşen beklenmedik çıktıyı yayınlamaz.
+Kesin sayılar her build'de `stats.json` içine yazılır. Tier'lar kümülatiftir: daha yüksek bir seviyeye geçtiğinizde alt seviyede engellenen bir domain sessizce açılmaz. Build sistemi Standard için 100K, Pro için 150K ve Ultra için 250K altına düşen beklenmedik çıktıyı yayınlamaz.
 
 ## Kullanım — kararlı RAW bağlantılar
 
@@ -44,6 +44,10 @@ Core TR resolver outputs are published under `dist/lists/osfilter-core-dnsmasq.c
 Build istatistikleri:
 
 https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/stats.json
+
+Upstream bütünlük kilidi (SHA-256, byte boyutu, final URL):
+
+https://raw.githubusercontent.com/osmanilcektu/osfilter/dist/upstream-lock.json
 
 ## NextDNS hedefi
 
