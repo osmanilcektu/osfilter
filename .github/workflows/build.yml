@@ -57,6 +57,8 @@ jobs:
           cp LICENSE "$DIST/"
           cp THIRD_PARTY_NOTICES.md "$DIST/"
           cp LICENSES/GPL-3.0-only.txt "$DIST/LICENSES/"
+          cp LICENSES/ODbL-1.0.txt "$DIST/LICENSES/"
+          cp LICENSES/UNLICENSE.txt "$DIST/LICENSES/"
 
           cat > "$DIST/README.md" <<'EOF'
           # OSFilter generated distribution
