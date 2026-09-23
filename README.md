@@ -17,7 +17,7 @@ Amaç yalnız domain sayısını büyütmek değil; 100 binlerce kayıtla çalı
 | **Lite** | düşük bozulma riski | 40K+ | HaGeZi Light + Core TR |
 | **Standard** | varsayılan dengeli liste | 160K+ | HaGeZi Normal + Core TR |
 | **Pro** | daha geniş koruma | 229K+ | HaGeZi Pro + Core TR |
-| **Ultra** | agresif çok-kaynaklı koruma | 250K+ garanti eşiği | HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
+| **Ultra** | agresif çok-kaynaklı koruma | 500K+ (son doğrulanan: 564,725) | HaGeZi Ultimate + Block List Project Ads/Tracking + Core TR |
 
 Kesin sayılar her build'de `stats.json` içine yazılır. Build sistemi Standard için 100K, Pro için 150K ve Ultra için 250K altına düşen beklenmedik çıktıyı yayınlamaz.
 
@@ -150,3 +150,12 @@ Ayrıntılar:
 Yanlış engelleme ve kaçan reklam/izleyici bildirimleri GitHub Issues üzerinden alınır. Yeni Core TR domainleri kanıt/provenance olmadan kabul edilmez.
 
 Katkı rehberi: [CONTRIBUTING.md](CONTRIBUTING.md)
+
+
+## Teknik dokümantasyon
+
+- [100K+ ölçekleme ve kaynak stratejisi](docs/SCALING.md)
+- [Core TR büyütme süreci](docs/CORE_TR_GROWTH.md)
+- [NextDNS entegrasyon planı](docs/NEXTDNS.md)
+- [Changelog](CHANGELOG.md)
+- [Security / false-positive politikası](SECURITY.md)
