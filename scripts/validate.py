@@ -110,6 +110,14 @@ def main() -> None:
     for domain in duplicates(allow):
         errors.append(f"allowlist.txt: duplicate: {domain}")
 
+    functional_allow = load_domain_file(ROOT / "sources" / "functional-allowlist.txt")
+    for domain in duplicates(functional_allow):
+        errors.append(f"sources/functional-allowlist.txt: duplicate: {domain}")
+
+    overlap = sorted(set(allow) & set(functional_allow))
+    for domain in overlap:
+        errors.append(f"allowlist tekrarı: {domain} hem manual hem functional listede")
+
     for domain, categories in sorted(owners.items()):
         if len(categories) > 1:
             errors.append(
@@ -152,7 +160,7 @@ def main() -> None:
     print(
         f"OSFilter doğrulaması başarılı: "
         f"{len(blocked)} benzersiz domain, {high} yüksek güven, "
-        f"{len(set(allow))} allowlist girdisi"
+        f"{len(set(allow))} manual + {len(set(functional_allow))} functional allowlist girdisi"
     )
 
 
