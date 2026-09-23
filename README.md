@@ -99,6 +99,7 @@ Yerel veri:
 - `sources/gambling.txt`
 - `sources/evidence.csv`
 - `allowlist.txt`
+- `sources/functional-allowlist.txt` — giriş/ödeme/core API gibi kritik işlevsel uçlar için dar güvenlik allowlist’i
 
 Her yerel domain için evidence kaydı zorunludur. CI:
 
@@ -124,13 +125,14 @@ tüm upstream'leri yeniden indirir, normalize eder, duplicate'leri temizler, all
 
 ## Formatlar
 
-OSFilter şu formatları doğrudan üretir:
+OSFilter aynı canonical domain setinden doğrudan şu formatları üretir:
 
 - Adblock / AdGuard Home / uBlock uyumlu domain kuralları
 - hosts
 - plain domains
-
-dnsmasq ve RPZ formatları sonraki compatibility katmanında aynı canonical domain setinden üretilebilir; yeni veri kaynağı eklemeyi gerektirmez.
+- dnsmasq 2.86+
+- Unbound `local-zone`
+- BIND/Knot/PowerDNS uyumlu RPZ
 
 ## DNS engellemenin sınırı
 
@@ -169,5 +171,6 @@ Katkı rehberi: [CONTRIBUTING.md](CONTRIBUTING.md)
 - [100K+ ölçekleme ve kaynak stratejisi](docs/SCALING.md)
 - [Core TR büyütme süreci](docs/CORE_TR_GROWTH.md)
 - [NextDNS entegrasyon planı](docs/NEXTDNS.md)
+- [NextDNS / AdGuard sağlayıcı kabul planı](docs/PROVIDER_ADOPTION.md)
 - [Changelog](CHANGELOG.md)
 - [Security / false-positive politikası](SECURITY.md)
