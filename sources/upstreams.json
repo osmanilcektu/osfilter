@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "active": {
+    "hagezi_light": {
+      "name": "HaGeZi Multi LIGHT",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/light-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "min_entries": 30000,
+      "max_entries": 100000,
+      "tier": "lite"
+    },
+    "hagezi_normal": {
+      "name": "HaGeZi Multi NORMAL",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/multi-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "min_entries": 100000,
+      "max_entries": 400000,
+      "tier": "standard"
+    },
+    "hagezi_pro": {
+      "name": "HaGeZi Multi PRO",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt",
+      "homepage": "https://github.com/hagezi/dns-blocklists",
+      "license": "GPL-3.0-only",
+      "min_entries": 150000,
+      "max_entries": 500000,
+      "tier": "pro"
+    }
+  },
+  "research_only": {
+    "adguard_filters": {
+      "name": "AdGuard Filters / Mobile Ads Filter",
+      "homepage": "https://github.com/AdguardTeam/AdguardFilters",
+      "license": "GPL-3.0-only",
+      "reason": "Rich Adblock syntax includes cosmetic and request rules. Use as a validation/research signal until the DNS-safe extractor is audited."
+    },
+    "goodbyeads": {
+      "name": "GoodbyeAds",
+      "homepage": "https://github.com/jerryn70/GoodbyeAds",
+      "license": "MIT at repository level",
+      "reason": "The project documents mixed upstream provenance including copyleft, non-commercial, no-license and all-rights-reserved inputs. Do not wholesale-import into OSFilter until provenance is resolved."
+    },
+    "windows_spy_blocker": {
+      "name": "WindowsSpyBlocker",
+      "homepage": "https://github.com/crazy-max/WindowsSpyBlocker",
+      "license": "MIT",
+      "reason": "Useful Windows telemetry research signal, but default host data is old and can affect Windows features. Keep out of default tiers until revalidated."
+    },
+    "adaway": {
+      "name": "AdAway default hosts",
+      "homepage": "https://github.com/AdAway/adaway.github.io",
+      "license": "CC BY 3.0",
+      "reason": "Useful mobile-ad signal. Kept outside the GPL aggregate until attribution and data-license treatment is explicitly reviewed."
+    }
+  }
+}
