@@ -1,4 +1,4 @@
-name: Build generated lists
+name: Build and publish lists
 
 on:
   push:
@@ -17,17 +17,16 @@ permissions:
   contents: write
 
 concurrency:
-  group: osfilter-build-main
+  group: osfilter-dist-publish
   cancel-in-progress: false
 
 jobs:
   build:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout
+      - name: Checkout source branch
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -47,20 +46,45 @@ jobs:
       - name: Show build statistics
         run: cat stats.json
 
-      - name: Commit generated outputs
+      - name: Stage distribution tree
         run: |
-          if git diff --quiet -- osfilter.txt hosts.txt domains.txt stats.json lists/; then
-            echo "Generated outputs are already current."
-            exit 0
-          fi
+          DIST="$RUNNER_TEMP/osfilter-dist"
+          rm -rf "$DIST"
+          mkdir -p "$DIST/lists" "$DIST/LICENSES"
+
+          cp osfilter.txt hosts.txt domains.txt stats.json "$DIST/"
+          cp lists/*.txt "$DIST/lists/"
+          cp LICENSE "$DIST/"
+          cp THIRD_PARTY_NOTICES.md "$DIST/"
+          cp LICENSES/GPL-3.0-only.txt "$DIST/LICENSES/"
+
+          cat > "$DIST/README.md" <<'EOF'
+          # OSFilter generated distribution
+
+          This branch is generated automatically. Do not edit it manually.
+
+          Source repository:
+          https://github.com/osmanilcektu/osfilter
+
+          Main aliases are the Standard tier:
+          - osfilter.txt — Adblock
+          - hosts.txt — hosts
+          - domains.txt — plain domains
+
+          See stats.json for current entry counts and THIRD_PARTY_NOTICES.md for attribution.
+          EOF
+
+      - name: Publish orphan dist branch
+        run: |
+          DIST="$RUNNER_TEMP/osfilter-dist"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add osfilter.txt hosts.txt domains.txt stats.json lists/
-          git commit -m "build: refresh OSFilter tiers [skip ci]"
 
-          # The repository may have moved while this build was downloading
-          # upstream lists. Rebase the generated commit onto the latest main.
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+          git checkout --orphan dist-publish
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$DIST"/. .
+
+          git add -f .
+          git commit -m "build: publish OSFilter distribution"
+          git push --force origin HEAD:dist
