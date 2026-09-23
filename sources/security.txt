@@ -1,0 +1,3 @@
+# OSFilter zararlı/phishing kaynakları
+# Biçim: satır başına yalnızca bir alan adı.
+# Bir alan adı eklenmeden önce kötüye kullanım gerekçesi doğrulanmalıdır.
