@@ -1,0 +1,3 @@
+# OSFilter reklam kaynakları
+# Biçim: satır başına yalnızca bir alan adı.
+# Örnek kayıtlar bilinçli olarak eklenmez; yalnız doğrulanmış gerçek alan adları eklenmelidir.
