@@ -1,52 +1,84 @@
 OSFilter Licensing Notice
 Copyright (c) 2026 Osman İlçektuğ
 
-This repository intentionally uses separate licenses for software and filter data.
+OSFilter intentionally separates original data, aggregate outputs, software,
+documentation and brand rights.
 
 1. SOFTWARE / AUTOMATION CODE
+
 Files under scripts/, tests/ and .github/ are licensed under:
 GNU Affero General Public License v3.0 only (AGPL-3.0-only).
 
-License text and terms:
-https://www.gnu.org/licenses/agpl-3.0.html
+Full text:
+LICENSES/AGPL-3.0-only.txt
 
-2. FILTER DATABASE / GENERATED LISTS
-The domain database and generated filtering outputs, including:
-- sources/*.txt
+2. OSFILTER ORIGINAL CORE TR DATA
+
+OSFilter's independently maintained source data and Core TR outputs are
+dual-licensed, at the recipient's option, under either:
+
+- Open Data Commons Open Database License v1.0 (ODbL-1.0), OR
+- GNU General Public License v3.0 only (GPL-3.0-only).
+
+This applies to OSFilter-authored/local data in:
+- sources/ads.txt
+- sources/trackers.txt
+- sources/security.txt
+- sources/gambling.txt
 - sources/evidence.csv
 - allowlist.txt
+- lists/osfilter-core.txt
+- lists/osfilter-core-hosts.txt
+- lists/osfilter-core-domains.txt
+- locally maintained security/gambling outputs
+
+The GPL option exists so the same original OSFilter data can be legally
+combined into GPL-3.0 aggregate tiers.
+
+3. GLOBAL AGGREGATE OUTPUTS
+
+The following outputs include or are derived from GPL-3.0-only upstream data
+from HaGeZi DNS Blocklists and are therefore distributed under GPL-3.0-only:
+
 - osfilter.txt
 - hosts.txt
 - domains.txt
-- lists/*.txt
-- stats.json
+- lists/osfilter-lite.txt
+- lists/osfilter-lite-hosts.txt
+- lists/osfilter-lite-domains.txt
+- lists/osfilter-pro.txt
+- lists/osfilter-pro-hosts.txt
+- lists/osfilter-pro-domains.txt
 
-are licensed under:
-Open Data Commons Open Database License v1.0 (ODbL-1.0).
+See THIRD_PARTY_NOTICES.md and sources/upstreams.json for attribution and
+source policy.
 
-License text and terms:
-https://opendatacommons.org/licenses/odbl/1-0/
+Full GPL text:
+LICENSES/GPL-3.0-only.txt
 
-The ODbL permits use, including commercial use, subject to its attribution
-and share-alike requirements for the database and qualifying derivative
-databases. This is intentional so DNS providers and security products may
-integrate OSFilter without turning the maintained database into a closed,
-rebranded derivative.
+4. DOCUMENTATION
 
-3. DOCUMENTATION
-README.md, CONTRIBUTING.md and docs/ are licensed under CC BY-SA 4.0 unless
-a file states otherwise.
+README.md, CONTRIBUTING.md, THIRD_PARTY_NOTICES.md and docs/ are licensed
+under CC BY-SA 4.0 unless a file states otherwise.
 
-License text and terms:
-https://creativecommons.org/licenses/by-sa/4.0/
+Full text:
+LICENSES/CC-BY-SA-4.0.txt
 
-4. NAME, LOGO AND BRAND
-The OSFilter name, logos, visual identity and the personal identity of the
-maintainer are not granted as trademarks by the licenses above. No license
-grants permission to imply endorsement, official partnership or authorship
-by Osman İlçektuğ.
+5. NAME, LOGO AND BRAND
 
-SPDX identifiers:
+The OSFilter name, logos, visual identity and Osman İlçektuğ's personal
+identity are not licensed as trademarks by any open-source or open-data
+license in this repository. No license grants permission to imply official
+endorsement, sponsorship, partnership or authorship.
+
+6. THIRD-PARTY RIGHTS
+
+OSFilter does not claim ownership of third-party upstream projects.
+Their notices and license obligations remain applicable to their respective
+material. See THIRD_PARTY_NOTICES.md.
+
+SPDX identifiers used in this repository:
 AGPL-3.0-only
+GPL-3.0-only
 ODbL-1.0
 CC-BY-SA-4.0
