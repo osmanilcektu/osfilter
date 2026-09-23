@@ -7,10 +7,10 @@ Son güncelleme: 2026-09-23
 Başarılı dağıtım build'i:
 
 - Core TR: 24 bağımsız doğrulanmış domain
-- Lite: 40,032
-- Standard: 162,632
-- Pro: 229,479
-- Ultra: 564,725
+- Lite: 39,865
+- Standard: 164,051
+- Pro: 245,882
+- Ultra: 587,127
 
 Bu sayılar \`dist/stats.json\` tarafından otomatik üretilir ve upstream değiştikçe değişebilir.
 
@@ -191,7 +191,9 @@ Bu nedenle OSFilter güvenlik datasetlerini ayrı tier/listeler olarak geliştir
 - dnsmasq output
 - RPZ output
 - Unbound output
-- upstream response hash/history
+- upstream response hash/byte provenance — tamamlandı (`upstream-lock.json`)
+- deterministic RPZ serial — tamamlandı
+- değişmeyen build'lerde dist publish atlama — tamamlandı
 - stale/dead domain sampling
 - popular-site regression allowlist
 - Core TR candidate review dashboard
