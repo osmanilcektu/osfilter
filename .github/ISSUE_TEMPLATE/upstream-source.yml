@@ -1,0 +1,68 @@
+name: Upstream source proposal
+description: Suggest a new external blocklist/data source for OSFilter research or aggregation.
+title: "[Upstream] "
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Source name
+      placeholder: Project / list name
+    validations:
+      required: true
+
+  - type: input
+    id: homepage
+    attributes:
+      label: Project homepage
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+
+  - type: input
+    id: raw
+    attributes:
+      label: RAW list URL
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: License
+      description: Exact SPDX-style identifier if known, and link to the license.
+      placeholder: GPL-3.0-only / MIT / CC-BY-3.0 / Unlicense
+    validations:
+      required: true
+
+  - type: dropdown
+    id: format
+    attributes:
+      label: Source format
+      options:
+        - Plain domains
+        - Hosts
+        - Adblock / ABP
+        - dnsmasq
+        - RPZ
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: value
+    attributes:
+      label: Why should OSFilter use it?
+      description: Coverage, freshness, regional value, false-positive history and maintenance activity.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Checks
+      options:
+        - label: I checked that the source is actively maintained or explained why an archived source is still useful.
+          required: true
+        - label: I provided a license instead of assuming that a public GitHub repository is automatically reusable.
+          required: true
