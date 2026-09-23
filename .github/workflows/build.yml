@@ -45,6 +45,14 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
+      - name: Load last published distribution
+        run: |
+          git fetch --quiet origin dist:refs/remotes/origin/dist
+          PREVIOUS="$RUNNER_TEMP/osfilter-previous"
+          mkdir -p "$PREVIOUS"
+          git archive origin/dist | tar -x -C "$PREVIOUS"
+          echo "OSFILTER_PREVIOUS_DIST_DIR=$PREVIOUS" >> "$GITHUB_ENV"
+
       - name: Build all tiers
         run: python scripts/build.py
 
@@ -52,16 +60,7 @@ jobs:
         run: cat stats.json
 
       - name: Guard against sudden upstream changes
-        run: |
-          if git fetch --quiet origin dist:refs/remotes/origin/dist 2>/dev/null; then
-            PREVIOUS="$RUNNER_TEMP/osfilter-previous"
-            mkdir -p "$PREVIOUS/lists"
-            git show origin/dist:domains.txt > "$PREVIOUS/domains.txt"
-            git show origin/dist:lists/osfilter-ultra-domains.txt > "$PREVIOUS/lists/osfilter-ultra-domains.txt"
-            python scripts/check_release.py --previous-dir "$PREVIOUS"
-          else
-            echo "No previous dist branch: first publication."
-          fi
+        run: python scripts/check_release.py --previous-dir "$OSFILTER_PREVIOUS_DIST_DIR"
 
       - name: Stage distribution tree
         run: |
@@ -69,7 +68,8 @@ jobs:
           rm -rf "$DIST"
           mkdir -p "$DIST/lists" "$DIST/LICENSES"
 
-          cp osfilter.txt hosts.txt domains.txt dnsmasq.conf unbound.conf rpz.zone              stats.json upstream-lock.json SHA256SUMS "$DIST/"
+          cp osfilter.txt hosts.txt domains.txt dnsmasq.conf unbound.conf rpz.zone \
+             stats.json upstream-lock.json SHA256SUMS "$DIST/"
           cp lists/* "$DIST/lists/"
           cp LICENSE "$DIST/"
           cp THIRD_PARTY_NOTICES.md "$DIST/"
@@ -98,6 +98,8 @@ jobs:
           - Lite
           - Pro
           - Ultra
+          - TR Regional
+          - TR Regional Ultra
 
           See:
           - stats.json for current entry counts
@@ -111,13 +113,8 @@ jobs:
         run: |
           DIST="$RUNNER_TEMP/osfilter-dist"
           CHANGED=true
-
-          if git fetch --quiet origin dist:refs/remotes/origin/dist 2>/dev/null; then
-            if git show origin/dist:SHA256SUMS > "$RUNNER_TEMP/old-SHA256SUMS" 2>/dev/null; then
-              if cmp -s "$RUNNER_TEMP/old-SHA256SUMS" "$DIST/SHA256SUMS"; then
-                CHANGED=false
-              fi
-            fi
+          if diff -qr "$OSFILTER_PREVIOUS_DIST_DIR" "$DIST" >/dev/null; then
+            CHANGED=false
           fi
 
           echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
@@ -137,7 +134,7 @@ jobs:
 
           git add -f .
           git commit -m "build: publish OSFilter distribution"
-          git push --force origin HEAD:dist
+          git push --force-with-lease origin HEAD:dist
 
       - name: No distribution changes
         if: steps.changes.outputs.changed != 'true'

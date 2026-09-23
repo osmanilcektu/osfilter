@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -6,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from build import protected_block_rules  # noqa: E402
-from check_release import change_fractions  # noqa: E402
+from check_release import CHECKED_FILES, change_fractions, check_release  # noqa: E402
 from regional import is_sensitive_domain, regional_profile  # noqa: E402
 
 
@@ -53,3 +54,19 @@ class ReleaseGuardTests(unittest.TestCase):
     def test_empty_previous_release_fails_closed(self):
         with self.assertRaises(ValueError):
             change_fractions(set(), {"a.example.com"})
+
+    def test_regional_only_wipeout_stops_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            previous = Path(directory) / "previous"
+            current = Path(directory) / "current"
+            content = "".join(f"d{n}.example.tr\n" for n in range(100))
+            for filename in CHECKED_FILES:
+                for root in (previous, current):
+                    path = root / filename
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text(content, encoding="utf-8")
+            (current / "lists/osfilter-tr-regional-domains.txt").write_text(
+                "".join(f"d{n}.example.tr\n" for n in range(80)), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(RuntimeError, "tr-regional-domains"):
+                check_release(previous, current)

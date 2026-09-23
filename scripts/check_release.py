@@ -8,7 +8,14 @@ from pathlib import Path
 
 from build import ROOT
 
-CHECKED_FILES = ("domains.txt", "lists/osfilter-ultra-domains.txt")
+CHECKED_FILES = (
+    "lists/osfilter-lite-domains.txt",
+    "domains.txt",
+    "lists/osfilter-pro-domains.txt",
+    "lists/osfilter-ultra-domains.txt",
+    "lists/osfilter-tr-regional-domains.txt",
+    "lists/osfilter-tr-regional-ultra-domains.txt",
+)
 MAX_CHANGE_FRACTION = 0.10
 
 

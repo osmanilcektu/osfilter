@@ -23,3 +23,7 @@ oauth2.googleapis.com
 openai.com
 stripe.com
 web.whatsapp.com
+
+# Sağlık Bakanlığı TDMS muhasebe sistemine giriş adresi; reklam/izleyici değildir.
+# https://kahramanmarasism.saglik.gov.tr/TR-280078/sik-sorulan-sorular.html
+tdms.saglik.gov.tr

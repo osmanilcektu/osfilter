@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import ipaddress
 import json
+import os
 import re
 import urllib.request
 from pathlib import Path
@@ -27,6 +28,11 @@ SOURCES = {
 
 LABEL_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
 ABP_DOMAIN_RE = re.compile(r"^\|\|([a-zA-Z0-9._-]+)\^")
+RPZ_SERIAL_RE = re.compile(r"(?m)^@ IN SOA \S+ \S+ \((\d+)\s")
+PROTECTED_TURKISH_ZONES = {
+    "com.tr", "net.tr", "org.tr", "gov.tr", "edu.tr", "bel.tr",
+    "k12.tr", "pol.tr", "mil.tr", "biz.tr", "info.tr", "av.tr", "dr.tr",
+}
 
 
 def normalize_domain(value: str) -> str:
@@ -58,6 +64,8 @@ def normalize_domain(value: str) -> str:
     labels = ascii_domain.split(".")
     if len(labels) < 2:
         raise ValueError(f"geçerli FQDN değil: {value!r}")
+    if ascii_domain in PROTECTED_TURKISH_ZONES:
+        raise ValueError(f"kayıt üst bölgesi engellenemez: {value!r}")
     if any(not LABEL_RE.fullmatch(label) for label in labels):
         raise ValueError(f"geçersiz domain etiketi: {value!r}")
 
@@ -125,6 +133,17 @@ def parse_external_line(raw: str) -> str | None:
         return None
 
 
+def parse_plain_domain_line(raw: str) -> str | None:
+    """The approved upstreams promise one domain per line, with no rules/options."""
+    line = raw.strip()
+    if not line or line.startswith(("#", "!")) or len(line.split()) != 1:
+        return None
+    try:
+        return normalize_domain(line)
+    except ValueError:
+        return None
+
+
 def _looks_like_html(raw: bytes) -> bool:
     sample = raw[:4096].lstrip().lower()
     return (
@@ -171,9 +190,10 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
         if line.strip() and not line.lstrip().startswith(("#", "!"))
     )
 
+    parser = parse_plain_domain_line if spec.get("format") == "domains" else parse_external_line
     domains = unique_sorted(
         domain
-        for domain in (parse_external_line(line) for line in raw_lines)
+        for domain in (parser(line) for line in raw_lines)
         if domain is not None
     )
 
@@ -198,6 +218,7 @@ def fetch_upstream(key: str, spec: dict) -> tuple[list[str], dict]:
         "homepage": spec["homepage"],
         "license": spec["license"],
         "region": spec.get("region", "global"),
+        "format": spec.get("format", "auto"),
         "entries": len(domains),
         "bytes": len(raw_bytes),
         "sha256": raw_sha256,
@@ -372,8 +393,11 @@ def render_rpz(
     *,
     license_id: str,
     upstream: str | None = None,
+    serial: int | None = None,
 ) -> str:
-    serial = deterministic_serial(domains)
+    serial = deterministic_serial(domains) if serial is None else serial
+    if not 0 <= serial <= 0xFFFFFFFF:
+        raise ValueError("RPZ serial 32 bit aralığında olmalı")
     lines = [
         f"; {title}",
         "; BIND Response Policy Zone (RPZ), NXDOMAIN policy.",
@@ -426,6 +450,23 @@ def assert_tier_nesting(
                 f"tier nesting bozuk: {child} -> {parent}; "
                 f"{len(missing)} domain üst tier'da yok (örn: {sample})"
             )
+
+
+def previous_rpz_serial(
+    domains: list[str], previous_domains: Path, previous_zone: Path,
+) -> int:
+    """Reuse unchanged serials; increment changed zones using DNS serial arithmetic."""
+    old_domains = {
+        line.strip() for line in previous_domains.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    }
+    match = RPZ_SERIAL_RE.search(previous_zone.read_text(encoding="utf-8"))
+    if match is None:
+        raise ValueError(f"önceki RPZ SOA serial bulunamadı: {previous_zone}")
+    old_serial = int(match.group(1))
+    if not 0 <= old_serial <= 0xFFFFFFFF:
+        raise ValueError(f"önceki RPZ serial geçersiz: {old_serial}")
+    return old_serial if old_domains == set(domains) else (old_serial + 1) & 0xFFFFFFFF
 
 
 def main() -> None:
@@ -500,6 +541,14 @@ def main() -> None:
 
     assert_tier_nesting(lite, standard, pro, ultra)
 
+    previous_dist = os.environ.get("OSFILTER_PREVIOUS_DIST_DIR")
+
+    def rpz_serial(domains: list[str], zone: str, domain_list: str) -> int:
+        if previous_dist is None:
+            return deterministic_serial(domains)
+        previous = Path(previous_dist)
+        return previous_rpz_serial(domains, previous / domain_list, previous / zone)
+
     def tier_notice(tier_name: str, *, include_regional: bool = False) -> str:
         included = ("lite", "standard", "pro", "ultra")
         included = included[:included.index(tier_name) + 1]
@@ -564,6 +613,7 @@ def main() -> None:
             standard,
             license_id="GPL-3.0-only",
             upstream=tier_notice("standard"),
+            serial=rpz_serial(standard, "rpz.zone", "domains.txt"),
         ),
     )
 
@@ -616,6 +666,8 @@ def main() -> None:
                 "OSFilter — Core TR RPZ",
                 local_core,
                 license_id="ODbL-1.0 OR GPL-3.0-only",
+                serial=rpz_serial(local_core, "lists/osfilter-core-rpz.zone",
+                                  "lists/osfilter-core-domains.txt"),
             ),
         ),
     ]
@@ -625,14 +677,14 @@ def main() -> None:
     for tier_name, domains, description in [
         (
             "tr-regional", tr_regional,
-            "Automatically updated .tr advertising/tracking domains from the Standard global tier, plus reviewed Core TR. Sensitive services are excluded.",
+            "Licensed Turkish Ad Hosts plus .tr advertising/tracking domains from Standard and reviewed Core TR. Sensitive services are excluded.",
         ),
         (
             "tr-regional-ultra", tr_regional_ultra,
-            "Aggressive .tr advertising/tracking domains from the Ultra global tier, plus reviewed Core TR. Higher breakage risk; opt in only.",
+            "Licensed Turkish Ad Hosts plus aggressive .tr domains from Ultra and reviewed Core TR. Higher breakage risk; opt in only.",
         ),
     ]:
-        title = "OSFilter — " + tier_name.replace("-", " ").title()
+        title = "OSFilter — TR Regional" + (" Ultra" if tier_name.endswith("ultra") else "")
         upstream = tier_notice("standard" if tier_name == "tr-regional" else "ultra",
                                include_regional=True)
         write(

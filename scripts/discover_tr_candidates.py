@@ -10,12 +10,12 @@ from __future__ import annotations
 
 import argparse
 import csv
-import re
 from collections import defaultdict
 from pathlib import Path
 
-from build import ROOT, SOURCES, fetch_upstream, load_domain_file, load_upstreams
-from regional import is_turkey_domain
+from build import (ROOT, SOURCES, fetch_upstream, load_domain_file,
+                   load_upstreams, protected_block_rules)
+from regional import is_sensitive_domain, is_turkey_domain
 
 AD_PATTERNS = (
     "ad.", "ads.", "adserver", "adservice", "advert", "reklam",
@@ -44,7 +44,9 @@ def local_domains() -> set[str]:
     out: set[str] = set()
     for path in SOURCES.values():
         out.update(load_domain_file(path))
-    out.update(load_domain_file(ROOT / "allowlist.txt"))
+    allowed = set(load_domain_file(ROOT / "allowlist.txt"))
+    allowed.update(load_domain_file(ROOT / "sources" / "functional-allowlist.txt"))
+    out.update(protected_block_rules(allowed))
     return out
 
 
@@ -52,15 +54,15 @@ def _contains_any(domain: str, patterns: tuple[str, ...]) -> list[str]:
     return [pattern for pattern in patterns if pattern in domain]
 
 
-def classify_candidate(domain: str, source_count: int) -> dict[str, str | int]:
+def classify_candidate(domain: str, project_count: int) -> dict[str, str | int]:
     """Return explainable review metadata. Never decides blocking automatically."""
     ad_hits = _contains_any(domain, AD_PATTERNS)
     tracker_hits = _contains_any(domain, TRACKER_PATTERNS)
     critical_hits = _contains_any(domain, CRITICAL_PATTERNS)
     functional_hits = _contains_any(domain, FUNCTIONAL_PATTERNS)
 
-    score = min(source_count * 10, 60)
-    reasons: list[str] = [f"{source_count} upstream"]
+    score = min(project_count * 15, 60)
+    reasons: list[str] = [f"{project_count} bağımsız kaynak projesi"]
 
     if ad_hits:
         score += 30
@@ -106,24 +108,33 @@ def classify_candidate(domain: str, source_count: int) -> dict[str, str | int]:
     }
 
 
+def independent_projects(keys: set[str], projects: dict[str, str]) -> int:
+    """Several tiers from one maintainer are one corroborating project."""
+    return len({projects[key] for key in keys})
+
+
 def discover() -> list[dict[str, str | int]]:
     cfg = load_upstreams()
     existing = local_domains()
     membership: dict[str, set[str]] = defaultdict(set)
+    projects = {key: spec["homepage"].rstrip("/") for key, spec in cfg["active"].items()}
 
     for key, spec in cfg["active"].items():
         domains, _ = fetch_upstream(key, spec)
         for domain in domains:
-            if is_turkey_domain(domain) and domain not in existing:
+            regional = is_turkey_domain(domain) or spec.get("region") == "tr"
+            if regional and domain not in existing and not is_sensitive_domain(domain):
                 membership[domain].add(key)
 
     rows: list[dict[str, str | int]] = []
     for domain, keys in membership.items():
-        meta = classify_candidate(domain, len(keys))
+        project_count = independent_projects(keys, projects)
+        meta = classify_candidate(domain, project_count)
         rows.append(
             {
                 "domain": domain,
                 "source_count": len(keys),
+                "project_count": project_count,
                 "sources": ",".join(sorted(keys)),
                 **meta,
             }
@@ -134,7 +145,7 @@ def discover() -> list[dict[str, str | int]]:
         key=lambda row: (
             row["risk"] == "critical",
             -int(row["priority_score"]),
-            -int(row["source_count"]),
+            -int(row["project_count"]),
             str(row["domain"]),
         ),
     )
@@ -158,6 +169,7 @@ def main() -> None:
     fieldnames = [
         "domain",
         "source_count",
+        "project_count",
         "sources",
         "priority_score",
         "risk",
@@ -170,13 +182,13 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(rows)
 
-    multi = sum(1 for row in rows if int(row["source_count"]) >= 2)
+    multi = sum(1 for row in rows if int(row["project_count"]) >= 2)
     priority = sum(1 for row in rows if row["disposition"] == "priority-review")
     critical = sum(1 for row in rows if row["risk"] == "critical")
     print(
         f"TR candidate scan complete: {len(rows)} candidates, "
-        f"{multi} seen in 2+ upstreams, {priority} priority-review, "
-        f"{critical} critical-risk -> {output.relative_to(ROOT)}"
+        f"{multi} seen in 2+ independent projects, {priority} priority-review, "
+        f"{critical} critical-risk -> {output}"
     )
 
 
