@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -10,11 +11,13 @@ from build import (  # noqa: E402
     deterministic_serial,
     normalize_domain,
     parse_external_line,
+    parse_plain_domain_line,
+    previous_rpz_serial,
     render_dnsmasq,
     render_rpz,
     render_unbound,
 )
-from discover_tr_candidates import is_turkey_domain  # noqa: E402
+from discover_tr_candidates import independent_projects, is_turkey_domain, local_domains  # noqa: E402
 
 
 class NormalizeDomainTests(unittest.TestCase):
@@ -35,6 +38,12 @@ class NormalizeDomainTests(unittest.TestCase):
     def test_ip_is_rejected(self):
         with self.assertRaises(ValueError):
             normalize_domain("127.0.0.1")
+
+    def test_turkish_registration_zone_apex_is_rejected(self):
+        for zone in ("com.tr", "gov.tr", "edu.tr"):
+            with self.subTest(zone=zone), self.assertRaises(ValueError):
+                normalize_domain(zone)
+        self.assertEqual(normalize_domain("ads.example.com.tr"), "ads.example.com.tr")
 
 
 class ExternalParserTests(unittest.TestCase):
@@ -59,6 +68,13 @@ class ExternalParserTests(unittest.TestCase):
     def test_comments_and_localhost_are_ignored(self):
         self.assertIsNone(parse_external_line("# comment"))
         self.assertIsNone(parse_external_line("0.0.0.0 localhost"))
+
+    def test_registered_plain_domain_upstream_rejects_other_syntax(self):
+        self.assertEqual(parse_plain_domain_line("Ads.Example.COM"), "ads.example.com")
+        for line in ("0.0.0.0 ads.example.com", "||ads.example.com^",
+                     "ads.example.com # inline", "! comment", "com.tr"):
+            with self.subTest(line=line):
+                self.assertIsNone(parse_plain_domain_line(line))
 
 
 class ResolverFormatTests(unittest.TestCase):
@@ -96,6 +112,27 @@ class ResolverFormatTests(unittest.TestCase):
             deterministic_serial(["ads.example.com"]),
         )
 
+    def test_rpz_serial_reuses_unchanged_and_increments_changed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            domain_file = Path(directory) / "domains.txt"
+            zone_file = Path(directory) / "rpz.zone"
+            domain_file.write_text("# previous\nads.example.com\n", encoding="utf-8")
+            zone_file.write_text(render_rpz("test", ["ads.example.com"],
+                                           license_id="GPL-3.0-only", serial=17),
+                                 encoding="utf-8")
+            self.assertEqual(previous_rpz_serial(["ads.example.com"], domain_file,
+                                                 zone_file), 17)
+            self.assertEqual(previous_rpz_serial(["other.example.com"], domain_file,
+                                                 zone_file), 18)
+            zone_file.write_text(render_rpz("test", ["ads.example.com"],
+                                           license_id="GPL-3.0-only", serial=0xFFFFFFFF),
+                                 encoding="utf-8")
+            self.assertEqual(previous_rpz_serial(["other.example.com"], domain_file,
+                                                 zone_file), 0)
+            zone_file.write_text("invalid", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                previous_rpz_serial(["ads.example.com"], domain_file, zone_file)
+
 
 class TierTests(unittest.TestCase):
     def test_valid_nested_tiers(self):
@@ -124,6 +161,14 @@ class TurkeyCandidateTests(unittest.TestCase):
     def test_non_tr_domains(self):
         self.assertFalse(is_turkey_domain("example.com"))
         self.assertFalse(is_turkey_domain("nottr.example"))
+
+    def test_upstream_tiers_from_same_project_count_once(self):
+        projects = {"light": "https://example.org/project", "normal": "https://example.org/project",
+                    "other": "https://other.org"}
+        self.assertEqual(independent_projects(set(projects), projects), 2)
+
+    def test_functional_service_is_not_an_auto_promotion_candidate(self):
+        self.assertIn("tdms.saglik.gov.tr", local_domains())
 
 
 if __name__ == "__main__":

@@ -46,13 +46,14 @@ OSFilter therefore uses a source registry, license policy, sanity thresholds and
 
 For every enabled upstream:
 - HTTPS is mandatory;
-- the response is normalized to FQDNs;
+- the declared plain-domain format accepts only one FQDN per line;
 - IP addresses, localhost and malformed entries are rejected;
 - duplicates are removed;
 - OSFilter allowlist and DNS-blocking ancestors of protected hosts are removed before merge;
 - a minimum and maximum entry threshold prevents accidental empty/corrupt upstream builds;
 - outputs are sorted deterministically.
-- Standard and Ultra release sets are compared to the previous `dist` publication; over 10% additions or removals stop automatic publishing.
+- Lite, Standard, Pro, Ultra and both TR Regional release sets are compared to the previous `dist` publication; over 10% additions or removals stop automatic publishing.
+- RPZ SOA serials advance from the previous published zones when domain contents change.
 
 ## Scale target
 

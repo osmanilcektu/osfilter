@@ -81,8 +81,9 @@ Aktif kaynakların her biri için şu alanlar zorunludur:
 - açık lisans
 - beklenen minimum/maksimum entry sayısı
 - kullanılacağı tier
+- kaynak biçimi (`domains`: satır başına tek alan adı)
 
-CI, lisans allowlist'ine uymayan veya beklenmedik boyutta gelen kaynakları reddeder.
+CI, lisans allowlist'ine uymayan, biçimi uyuşmayan veya beklenmedik boyutta gelen kaynakları reddeder.
 
 ### Neden her büyük listeyi doğrudan içeri almıyoruz?
 
@@ -130,7 +131,7 @@ GitHub Actions:
 - **her gün 10:23 UTC**
 
 tüm upstream'leri yeniden indirir, normalize eder, duplicate'leri temizler, allowlist uygular ve `dist` dalını atomik olarak yeniden yayınlar.
-Yayınlamadan önce Standard ve Ultra çıktıları bir önceki sürümle karşılaştırılır; herhangi birinde eklenen veya çıkan kayıtlar önceki sürümün %10'unu aşarsa otomatik yayın durur ve kaynaklar incelenir.
+Yayınlamadan önce önceki `dist` sürümü zorunlu olarak alınır. Lite, Standard, Pro, Ultra, TR Regional ve TR Regional Ultra çıktılarından herhangi birinde eklenen veya çıkan kayıtlar önceki sürümün %10'unu aşarsa otomatik yayın durur ve kaynaklar incelenir. RPZ SOA seri numarası içerik değişince önceki yayına göre bir artar; aynı alan adları için sabit kalır.
 
 ## Formatlar
 

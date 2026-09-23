@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.1 — 2026-09-23
+
+### Fixed
+
+- Allowlist the Health Ministry's TDMS accounting login, previously blocked by an upstream.
+- Compare all six generated global and regional tiers with the last distribution before publishing; require the previous release.
+- Advance RPZ SOA serials from the prior publication when the domain set changes.
+- Count independent upstream projects for regional candidate priority and exclude allowlisted services.
+- Parse registered plain-domain sources strictly and reject Turkish registration-zone apexes.
+- Publish distribution file changes with a guarded force-with-lease update.
+
 ## 0.3.0 — 2026-09-23
 
 ### Added

@@ -8,7 +8,8 @@
       "license": "GPL-3.0-only",
       "min_entries": 30000,
       "max_entries": 100000,
-      "tier": "lite"
+      "tier": "lite",
+      "format": "domains"
     },
     "hagezi_normal": {
       "name": "HaGeZi Multi NORMAL",
@@ -17,7 +18,8 @@
       "license": "GPL-3.0-only",
       "min_entries": 100000,
       "max_entries": 400000,
-      "tier": "standard"
+      "tier": "standard",
+      "format": "domains"
     },
     "turkish_ad_hosts": {
       "name": "Turkish Ad Hosts by Ali Beyaz",
@@ -27,7 +29,8 @@
       "min_entries": 1500,
       "max_entries": 10000,
       "tier": "pro",
-      "region": "tr"
+      "region": "tr",
+      "format": "domains"
     },
     "hagezi_pro": {
       "name": "HaGeZi Multi PRO",
@@ -36,7 +39,8 @@
       "license": "GPL-3.0-only",
       "min_entries": 150000,
       "max_entries": 500000,
-      "tier": "pro"
+      "tier": "pro",
+      "format": "domains"
     },
     "hagezi_ultimate": {
       "name": "HaGeZi Multi ULTIMATE",
@@ -45,7 +49,8 @@
       "license": "GPL-3.0-only",
       "min_entries": 220000,
       "max_entries": 600000,
-      "tier": "ultra"
+      "tier": "ultra",
+      "format": "domains"
     },
     "blocklistproject_ads": {
       "name": "Block List Project — Ads",
@@ -54,7 +59,8 @@
       "license": "Unlicense",
       "min_entries": 180000,
       "max_entries": 500000,
-      "tier": "ultra"
+      "tier": "ultra",
+      "format": "domains"
     },
     "blocklistproject_tracking": {
       "name": "Block List Project — Tracking",
@@ -63,7 +69,8 @@
       "license": "Unlicense",
       "min_entries": 100000,
       "max_entries": 350000,
-      "tier": "ultra"
+      "tier": "ultra",
+      "format": "domains"
     }
   },
   "research_only": {

@@ -55,7 +55,7 @@ def validate_upstreams() -> list[str]:
     errors: list[str] = []
     required_fields = {
         "name", "url", "homepage", "license",
-        "min_entries", "max_entries", "tier"
+        "min_entries", "max_entries", "tier", "format"
     }
     allowed_tiers = {"lite", "standard", "pro", "ultra"}
     allowed_licenses = {"GPL-3.0-only", "Unlicense"}
@@ -82,6 +82,8 @@ def validate_upstreams() -> list[str]:
             seen_tiers.add(spec["tier"])
         if spec.get("region", "global") not in {"global", "tr"}:
             errors.append(f"{key}: region global veya tr olmalı")
+        if spec["format"] != "domains":
+            errors.append(f"{key}: yalnız doğrulanmış tek-domain-satır formatı desteklenir")
         if spec["license"] not in allowed_licenses:
             errors.append(f"{key}: allowlist dışı upstream lisansı: {spec['license']}")
         if not isinstance(spec["min_entries"], int) or not isinstance(spec["max_entries"], int):

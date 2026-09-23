@@ -4,7 +4,7 @@ Global listelerin yüz binlerce domain içermesi kolaydır. OSFilter'ın bağım
 
 ## Otomatik aday keşfi
 
-`scripts/discover_tr_candidates.py` aktif upstream'leri tarar ve `.tr` ile biten, Core TR'de henüz bulunmayan domainleri çıkarır.
+`scripts/discover_tr_candidates.py` aktif upstream'leri tarar; `.tr` ile biten veya Türkiye kaynağından gelen, yerel listelerde ve allowlist'lerde bulunmayan domainleri çıkarır. Hassas servisler elenir.
 
 Çıktı:
 
@@ -14,9 +14,10 @@ Alanlar:
 
 - `domain`
 - `source_count` — domain kaç aktif upstream'de görüldü
+- `project_count` — domain kaç bağımsız kaynak projesinde görüldü; aynı projenin farklı tier'ları bir kez sayılır
 - `sources` — hangi kaynaklarda bulundu
 
-Birden fazla upstream'de görülen adaylar incelemede daha yüksek öncelik alabilir; ancak bu otomatik olarak doğru/engellenebilir oldukları anlamına gelmez.
+Birden fazla bağımsız projede görülen adaylar incelemede daha yüksek öncelik alabilir; ancak bu otomatik olarak doğru/engellenebilir oldukları anlamına gelmez.
 
 ## Haftalık çalışma
 
